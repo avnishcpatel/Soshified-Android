@@ -33,6 +33,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,8 +46,6 @@ public class NewsViewerActivity extends AppCompatActivity
     private Post mPost;
     private boolean mIsTitleVisible = false;
     private boolean mIsTitleBoxVisible = true;
-
-    private boolean mIsExiting = false;
 
     private Bitmap headerImageBitmap;
 
@@ -59,8 +60,6 @@ public class NewsViewerActivity extends AppCompatActivity
     @Bind(R.id.subTitle) TextView mSubTitle;
     @Bind(R.id.webView) WebView mWebView;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +67,6 @@ public class NewsViewerActivity extends AppCompatActivity
         mPost = getIntent().getParcelableExtra("post");
 
         ButterKnife.bind(this);
-
 
         mAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -80,13 +78,17 @@ public class NewsViewerActivity extends AppCompatActivity
         mCollapsingToolbarLayout.setContentScrimColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
 
-
         mTitle.setText(postTitle);
-//        try {
-//            mSubTitle.setText(mPost.getSubtitle());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+
+        SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat toFormat = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
+        try {
+            Date date = fromFormat.parse(mPost.date);
+            String subtitle = "Posted by " + mPost.mAuthor + " on " + toFormat.format(date);
+            mSubTitle.setText(subtitle);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         Picasso.with(this)
                 .load(mPost.mThumbnail)
@@ -104,12 +106,10 @@ public class NewsViewerActivity extends AppCompatActivity
                             blur();
                         }
 
-
                         //Alter the statusbar if using Lollipop or higher
                         if (Build.VERSION.SDK_INT >= 21) {
                             getWindow().setStatusBarColor(Color.argb(75, 0, 0, 0));
                         }
-
                     }
 
                     @Override

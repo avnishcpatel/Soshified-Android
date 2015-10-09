@@ -3,9 +3,9 @@ package com.soshified.soshified;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +26,9 @@ import com.soshified.soshified.objects.Posts;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Stack;
 
 import butterknife.Bind;
@@ -147,12 +149,6 @@ public class NewsListFragment extends Fragment {
             this.mDataset = mDataset;
         }
 
-//        public void add(Posts post){
-//            int position = mDataset.size();
-//            mDataset.push(post);
-//            notifyItemInserted(position);
-//        }
-
         public void canAnimate(boolean canAnim){
             mCanAnimate = canAnim;
         }
@@ -175,11 +171,17 @@ public class NewsListFragment extends Fragment {
             final Post post = mDataset.get(position);
 
             holder.mNewsTitle.setText(Html.fromHtml(post.title));
-//            try {
-//                holder.mNewsSubtitle.setText(post.getSubtitle());
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
+
+            SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+                    Locale.ENGLISH);
+            SimpleDateFormat toFormat = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
+            try {
+                Date date = fromFormat.parse(post.date);
+                String subtitle = "Posted by " + post.getAuthor() + " on " + toFormat.format(date);
+                holder.mNewsSubtitle.setText(subtitle);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             Picasso.with(mContext)
                     .load(post.getImageUrl())

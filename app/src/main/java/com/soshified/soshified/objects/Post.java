@@ -5,11 +5,16 @@ import android.os.Parcelable;
 
 public class Post implements Parcelable {
 
-    public String title, date, excerpt, content, mThumbnail;
+    public String title, date, excerpt, content, mThumbnail, mAuthor;
     public Images thumbnail_images;
+    public Author author;
 
     public String getImageUrl(){
         return thumbnail_images.large.url;
+    }
+
+    public String getAuthor() {
+        return author.name;
     }
 
 
@@ -19,13 +24,16 @@ public class Post implements Parcelable {
         excerpt = in.readString();
         content = in.readString();
         mThumbnail = in.readString();
+        mAuthor = in.readString();
+    }
+
+    class Author {
+        String name;
     }
 
     class Images {
 
         Size large;
-
-
 
         class Size {
             String url;
@@ -45,6 +53,7 @@ public class Post implements Parcelable {
         dest.writeString(excerpt);
         dest.writeString(content);
         dest.writeString(thumbnail_images.large.url);
+        dest.writeString(author.name);
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -56,15 +65,5 @@ public class Post implements Parcelable {
             return new Post[size];
         }
     };
-
-
-//    public String getSubtitle() throws ParseException {
-//        SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
-//        SimpleDateFormat toFormat = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
-//        Date date = fromFormat.parse(date_gmt);
-//
-//        return "Posted by " + author.username + " on " + toFormat.format(date);
-//    }
-
 
 }
