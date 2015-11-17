@@ -77,6 +77,7 @@ public class NewsViewerActivity extends AppCompatActivity
         mToolbarTitle.setText(postTitle);
         mCollapsingToolbarLayout.setContentScrimColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
+        mCollapsingToolbarLayout.setTitleEnabled(false);
 
         mTitle.setText(postTitle);
 
@@ -90,9 +91,17 @@ public class NewsViewerActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
+        String mImageUrl;
+
+        if(mPost.mThumbnail.contains(" ")){
+            mImageUrl = mPost.mThumbnail.replaceAll(" ", "%20");
+        } else {
+            mImageUrl = mPost.mThumbnail;
+        }
+
         Picasso.with(this)
-                .load(mPost.mThumbnail)
-                .error(R.color.error_color)
+                .load(mImageUrl)
+                .error(R.color.primary_dark)
                 .placeholder(R.color.primary_light)
                 .into(mBackdrop, new Callback() {
                     @Override

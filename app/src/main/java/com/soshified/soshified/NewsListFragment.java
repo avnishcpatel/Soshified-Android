@@ -54,12 +54,6 @@ public class NewsListFragment extends Fragment {
     public NewsListFragment() {}
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mContext = getActivity();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_list, group, false);
         ButterKnife.bind(this, view);
@@ -90,6 +84,7 @@ public class NewsListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mContext = getActivity();
         //Setting up Retrofit adapter
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://www.soshified.com/api")
@@ -183,9 +178,17 @@ public class NewsListFragment extends Fragment {
                 e.printStackTrace();
             }
 
+            String mImageUrl;
+
+            if(post.getImageUrl().contains(" ")){
+                 mImageUrl = post.getImageUrl().replaceAll(" ", "%20");
+            } else {
+                mImageUrl = post.getImageUrl();
+            }
+
             Picasso.with(mContext)
-                    .load(post.getImageUrl())
-                    .error(R.color.error_color)
+                    .load(mImageUrl)
+                    .error(R.color.primary_dark)
                     .placeholder(R.color.primary_light)
                     .into(holder.mNewsImage);
 
