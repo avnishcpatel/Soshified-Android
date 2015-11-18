@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v8.renderscript.Allocation;
@@ -17,14 +18,19 @@ import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.text.Html;
+import android.transition.Transition;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.soshified.soshified.objects.Post;
+import com.soshified.soshified.util.AnimUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -49,16 +55,17 @@ public class NewsViewerActivity extends AppCompatActivity
 
     private Bitmap headerImageBitmap;
 
-    @Bind(R.id.toolbar)  Toolbar mToolbar;
-    @Bind(R.id.appbar) AppBarLayout mAppBarLayout;
-    @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @Bind(R.id.backdrop) ImageView mBackdrop;
-    @Bind(R.id.backdrop_blur) ImageView mBlurredBackdrop;
-    @Bind(R.id.title) TextView mTitle;
-    @Bind(R.id.toolbar_title) TextView mToolbarTitle;
-    @Bind(R.id.title_box) RelativeLayout mTitleBox;
-    @Bind(R.id.subTitle) TextView mSubTitle;
-    @Bind(R.id.webView) WebView mWebView;
+    @Bind(R.id.news_view_toolbar)  Toolbar mToolbar;
+    @Bind(R.id.news_view_appbar) AppBarLayout mAppBarLayout;
+    @Bind(R.id.news_view_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @Bind(R.id.news_view_backdrop) ImageView mBackdrop;
+    @Bind(R.id.news_view_backdrop_blur) ImageView mBlurredBackdrop;
+    @Bind(R.id.news_view_title) TextView mTitle;
+    @Bind(R.id.news_view_toolbar_title) TextView mToolbarTitle;
+    @Bind(R.id.news_view_title_box) RelativeLayout mTitleBox;
+    @Bind(R.id.news_view_subTitle) TextView mSubTitle;
+    @Bind(R.id.news_view_webView) WebView mWebView;
+    @Bind(R.id.news_view_scrollView) NestedScrollView scrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,17 +138,6 @@ public class NewsViewerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-
-        mWebView.stopLoading();
-        mWebView.loadDataWithBaseURL("http://soshified.com", "", "text/html", "UTF-8", null);
-        mWebView.setAlpha(0f);
-        mWebView.setVisibility(View.GONE);
-    }
-
-    @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
 
         //Hides/Shows toolbar title depending on scroll amount
@@ -178,9 +174,54 @@ public class NewsViewerActivity extends AppCompatActivity
     }
 
     /**
+     * Animates the WebView by rotating it 15 degrees and translating from the bottom.
+     * Lollipop onwards only.
+     */
+    private void animateWebView(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Interpolator interpolator = AnimationUtils.loadInterpolator(this,
+                    android.R.interpolator.fast_out_slow_in);
+
+            mWebView.setTranslationY(650);
+            mWebView.setRotation(-25);
+            mWebView.animate()
+                    .translationY(0f)
+                    .rotation(0f)
+                    .alpha(1f)
+                    .setDuration(500)
+                    .setInterpolator(interpolator)
+                    .setListener(null)
+                    .start();
+
+            Transition.TransitionListener returnHomeListener = new AnimUtils.TransitionListenerAdapter(){
+
+                @Override
+                public void onTransitionStart(Transition transition) {
+                    super.onTransitionStart(transition);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        scrollView.animate()
+                                .alpha(0f)
+                                .setDuration(100)
+                                .setInterpolator(AnimationUtils.loadInterpolator(NewsViewerActivity.this,
+                                        android.R.interpolator.linear_out_slow_in));
+                    }
+                }
+            };
+
+            getWindow().getSharedElementReturnTransition().addListener(returnHomeListener);
+        } else {
+            mWebView.animate()
+                    .alpha(1f)
+                    .setDuration(100)
+                    .start();
+        }
+
+    }
+
+    /**
      * Blurs the header image for when the AppBar collapses
      */
-    public void blur() {
+    private void blur() {
         int width = Math.round(headerImageBitmap.getWidth() * 0.1f);
         int height = Math.round(headerImageBitmap.getHeight() * 0.1f);
 
@@ -208,7 +249,7 @@ public class NewsViewerActivity extends AppCompatActivity
      * @param duration Duration of animation
      * @param visibility Whether to be Invisible or Visible
      */
-    public static void startAlphaAnimation (View v, long duration, int visibility) {
+    private static void startAlphaAnimation (View v, long duration, int visibility) {
         AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
                 ? new AlphaAnimation(0f, 1f) : new AlphaAnimation(1f, 0f);
 
@@ -244,10 +285,18 @@ public class NewsViewerActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(final String s) {
             super.onPostExecute(s);
+            mWebView.setAlpha(0f);
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.loadDataWithBaseURL("http://soshified.com", s, "text/html", "UTF-8", null);
+            mWebView.setWebViewClient(new WebViewClient() {
 
-            startAlphaAnimation(mWebView, 800, View.VISIBLE);
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    animateWebView();
+
+                }
+            });
         }
     }
 
