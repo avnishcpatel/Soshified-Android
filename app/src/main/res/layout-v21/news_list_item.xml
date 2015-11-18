@@ -14,14 +14,14 @@
         android:layout_height="wrap_content">
 
         <com.soshified.soshified.util.SquareImageView
-            android:id="@+id/news_image"
+            android:id="@+id/news_list_item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:transitionName="newsImage"
             android:scaleType="centerCrop" />
 
         <RelativeLayout
-            android:id="@+id/news_info"
+            android:id="@+id/news_list_item_info"
             android:background="@color/image_scrim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:layout_gravity="bottom">
 
             <TextView
-                android:id="@+id/news_title"
+                android:id="@+id/news_list_item_title"
                 android:paddingTop="24dp"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
@@ -41,8 +41,8 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/news_subtitle"
-                android:layout_below="@id/news_title"
+                android:id="@+id/news_list_item_subtitle"
+                android:layout_below="@id/news_list_item_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
                 android:textSize="14sp"
                 android:textColor="#eeeeee"

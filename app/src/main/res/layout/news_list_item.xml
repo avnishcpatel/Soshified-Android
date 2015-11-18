@@ -15,13 +15,13 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/news_image"
+            android:id="@+id/news_list_item_image"
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
             android:layout_height="225dp" />
 
         <RelativeLayout
-            android:id="@+id/news_info"
+            android:id="@+id/news_list_item_info"
             android:background="@color/image_scrim"
             android:layout_width="match_parent"
             android:padding="10dp"
@@ -29,15 +29,15 @@
             android:layout_gravity="bottom">
 
             <TextView
-                android:id="@+id/news_title"
+                android:id="@+id/news_list_item_title"
                 android:layout_marginBottom="5dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/news_subtitle"
-                android:layout_below="@id/news_title"
+                android:id="@+id/news_list_item_subtitle"
+                android:layout_below="@id/news_list_item_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

@@ -1,6 +1,5 @@
 package com.soshified.soshified;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -126,10 +125,10 @@ public class NewsListFragment extends Fragment {
         private int mLastAnimated = -1;
 
         public  class ViewHolder extends RecyclerView.ViewHolder {
-            @Bind(R.id.news_title) TextView mNewsTitle;
-            @Bind(R.id.news_subtitle) TextView mNewsSubtitle;
-            @Bind(R.id.news_image) ImageView mNewsImage;
-            @Bind(R.id.news_info) RelativeLayout mNewsInfo;
+            @Bind(R.id.news_list_item_title) TextView mNewsTitle;
+            @Bind(R.id.news_list_item_subtitle) TextView mNewsSubtitle;
+            @Bind(R.id.news_list_item_image) ImageView mNewsImage;
+            @Bind(R.id.news_list_item_info) RelativeLayout mNewsInfo;
             View itemView;
 
             public ViewHolder(View itemView) {
