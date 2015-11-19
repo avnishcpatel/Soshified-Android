@@ -5,10 +5,10 @@
             android:id="@+id/navigation_item_1"
             android:checked="true"
             android:icon="@mipmap/ic_launcher"
-            android:title="Test"/>
+            android:title="@string/news_title"/>
         <item
             android:id="@+id/navigation_item_2"
             android:icon="@mipmap/ic_launcher"
-            android:title="test"/>
+            android:title="@string/news_style"/>
     </group>
 </menu>
