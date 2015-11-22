@@ -86,7 +86,7 @@ public class NewsListFragment extends Fragment {
         mContext = getActivity();
         //Setting up Retrofit adapter
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://www.soshified.com/api")
+                .setEndpoint("http://www.soshified.com/json")
                 .build();
 
         GetLatestRequest request = restAdapter.create(GetLatestRequest.class);
