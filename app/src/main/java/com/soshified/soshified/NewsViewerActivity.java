@@ -273,9 +273,14 @@ public class NewsViewerActivity extends AppCompatActivity
 
             html.body().attr("style", "color: #444444");
 
-            html.select("img").first().remove();
-            html.select("br").first().remove();
-            html.select("p").last().remove();
+            if(html.select("img").first() != null)
+                html.select("img").first().remove();
+
+            if(html.select("br").first() != null)
+                html.select("br").first().remove();
+
+            if(html.select("p").last() != null)
+                html.select("p").last().remove();
 
             Elements images = html.select("img");
             images.attr("style", "max-width:100%; margin: 10px 0px");
