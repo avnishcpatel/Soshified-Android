@@ -70,7 +70,7 @@ public class NewsViewerActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_news_viewer);
+        setContentView(R.layout.activity_news_viewer);
         mPost = getIntent().getParcelableExtra("post");
 
         ButterKnife.bind(this);
