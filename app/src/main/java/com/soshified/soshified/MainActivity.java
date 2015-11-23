@@ -5,15 +5,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
     public static MainActivity mainActivity;
 
+    @Bind(R.id.main_progress) ProgressBar mProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
 
         mainActivity = this;
 
@@ -52,5 +61,12 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(fragment.getClass().getName())
                 .commit();
+    }
+
+    public void toggleProgress(){
+        if(mProgress.getVisibility() == View.VISIBLE)
+            mProgress.setVisibility(View.GONE);
+        else
+            mProgress.setVisibility(View.VISIBLE);
     }
 }

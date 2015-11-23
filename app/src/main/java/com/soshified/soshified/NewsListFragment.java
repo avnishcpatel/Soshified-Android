@@ -95,6 +95,8 @@ public class NewsListFragment extends Fragment {
             public void success(Posts posts, Response response) {
                 Stack<Post> mDataset = posts.posts;
 
+                MainActivity.getInstance().toggleProgress();
+
                 mAdapter = new NewsAdapter(mDataset);
                 mNewsList.setAdapter(mAdapter);
 
