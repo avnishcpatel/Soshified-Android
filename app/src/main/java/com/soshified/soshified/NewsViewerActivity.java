@@ -26,7 +26,7 @@ import android.view.animation.Interpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soshified.soshified.objects.Post;
@@ -51,7 +51,7 @@ public class NewsViewerActivity extends AppCompatActivity
 
     private Post mPost;
     private boolean mIsTitleVisible = false;
-    private boolean mIsTitleBoxVisible = true;
+    private boolean mEnterComplete = false;
 
     private Bitmap headerImageBitmap;
 
@@ -62,10 +62,10 @@ public class NewsViewerActivity extends AppCompatActivity
     @Bind(R.id.news_view_backdrop_blur) ImageView mBlurredBackdrop;
     @Bind(R.id.news_view_title) TextView mTitle;
     @Bind(R.id.news_view_toolbar_title) TextView mToolbarTitle;
-    @Bind(R.id.news_view_title_box) RelativeLayout mTitleBox;
-    @Bind(R.id.news_view_subTitle) TextView mSubTitle;
+    @Bind(R.id.news_view_subtitle) TextView mSubTitle;
     @Bind(R.id.news_view_webView) WebView mWebView;
-    @Bind(R.id.news_view_scrollView) NestedScrollView scrollView;
+    @Bind(R.id.news_view_scrollView) NestedScrollView mScrollView;
+    @Bind(R.id.news_view_progress) ProgressBar mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +74,10 @@ public class NewsViewerActivity extends AppCompatActivity
         mPost = getIntent().getParcelableExtra("post");
 
         ButterKnife.bind(this);
+
+        mWebView.setAlpha(0f);
+        mTitle.setAlpha(0f);
+        mSubTitle.setAlpha(0f);
 
         mAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -135,7 +139,28 @@ public class NewsViewerActivity extends AppCompatActivity
                 });
 
         new ParseNews().execute();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Transition.TransitionListener returnHomeListener = new AnimUtils.TransitionListenerAdapter(){
+
+                @Override
+                public void onTransitionStart(Transition transition) {
+                    super.onTransitionStart(transition);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mEnterComplete) {
+                        mScrollView.animate()
+                                .alpha(0f)
+                                .setDuration(100)
+                                .setInterpolator(AnimationUtils.loadInterpolator(NewsViewerActivity.this,
+                                        android.R.interpolator.linear_out_slow_in));
+                    }
+                }
+            };
+
+            getWindow().getSharedElementReturnTransition().addListener(returnHomeListener);
+        }
     }
+
+
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
@@ -157,64 +182,43 @@ public class NewsViewerActivity extends AppCompatActivity
             }
         }
 
-        //Does the same as above but for the title box
-        if (percentage >= 0.3f) {
-            if (mIsTitleBoxVisible) {
-                startAlphaAnimation(mTitleBox, 200, View.INVISIBLE);
-                mIsTitleBoxVisible = false;
-            }
-
-        } else{
-            if(!mIsTitleBoxVisible) {
-                startAlphaAnimation(mTitleBox, 200, View.VISIBLE);
-                mIsTitleBoxVisible = true;
-            }
-        }
-
     }
 
     /**
      * Animates the WebView by rotating it 15 degrees and translating from the bottom.
      * Lollipop onwards only.
      */
-    private void animateWebView(){
+    private void animate(){
+        Interpolator interpolator;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Interpolator interpolator = AnimationUtils.loadInterpolator(this,
+            interpolator = AnimationUtils.loadInterpolator(this,
                     android.R.interpolator.fast_out_slow_in);
-
-            mWebView.setTranslationY(650);
-            mWebView.setRotation(-25);
-            mWebView.animate()
-                    .translationY(0f)
-                    .rotation(0f)
-                    .alpha(1f)
-                    .setDuration(500)
-                    .setInterpolator(interpolator)
-                    .setListener(null)
-                    .start();
-
-            Transition.TransitionListener returnHomeListener = new AnimUtils.TransitionListenerAdapter(){
-
-                @Override
-                public void onTransitionStart(Transition transition) {
-                    super.onTransitionStart(transition);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        scrollView.animate()
-                                .alpha(0f)
-                                .setDuration(100)
-                                .setInterpolator(AnimationUtils.loadInterpolator(NewsViewerActivity.this,
-                                        android.R.interpolator.linear_out_slow_in));
-                    }
-                }
-            };
-
-            getWindow().getSharedElementReturnTransition().addListener(returnHomeListener);
         } else {
-            mWebView.animate()
-                    .alpha(1f)
-                    .setDuration(100)
-                    .start();
+            interpolator = AnimationUtils.loadInterpolator(this,
+                    android.R.interpolator.decelerate_cubic);
         }
+
+        int offset = mTitle.getHeight();
+        doAnimation(mTitle, offset, interpolator);
+
+        offset *= 1.5f;
+        doAnimation(mSubTitle, offset, interpolator);
+
+        offset *= 1.5f;
+        doAnimation(mWebView, offset, interpolator);
+
+        mEnterComplete = true;
+    }
+
+    private void doAnimation(View view, float offset, Interpolator interpolator) {
+        view.setTranslationY(offset);
+        view.setAlpha(0.8f);
+        view.animate()
+                .translationY(0f)
+                .alpha(1f)
+                .setDuration(600)
+                .setInterpolator(interpolator)
+                .start();
 
     }
 
@@ -267,6 +271,8 @@ public class NewsViewerActivity extends AppCompatActivity
         protected String doInBackground(Void... params) {
             Document html = Jsoup.parse(mPost.content);
 
+            html.body().attr("style", "color: #444444");
+
             html.select("img").first().remove();
             html.select("br").first().remove();
             html.select("p").last().remove();
@@ -285,7 +291,6 @@ public class NewsViewerActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(final String s) {
             super.onPostExecute(s);
-            mWebView.setAlpha(0f);
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.loadDataWithBaseURL("http://soshified.com", s, "text/html", "UTF-8", null);
             mWebView.setWebViewClient(new WebViewClient() {
@@ -293,7 +298,8 @@ public class NewsViewerActivity extends AppCompatActivity
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
-                    animateWebView();
+                    mProgressBar.setVisibility(View.GONE);
+                    animate();
 
                 }
             });

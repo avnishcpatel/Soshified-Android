@@ -36,7 +36,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    android:transitionName="newsImage"/>
 
                 <com.soshified.soshified.util.SquareImageView
                     android:id="@+id/news_view_backdrop_blur"
@@ -45,37 +46,6 @@
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"/>
 
-                <RelativeLayout
-                    android:id="@+id/news_view_title_box"
-                    android:background="@color/image_scrim"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom">
-
-                    <TextView
-                        android:id="@+id/news_view_title"
-                        android:paddingTop="24dp"
-                        android:paddingLeft="18dp"
-                        android:paddingRight="18dp"
-                        android:layout_marginBottom="5dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-                        android:textSize="24sp"
-                        android:textColor="#ffffff"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/news_view_subTitle"
-                        android:layout_below="@id/news_view_title"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
-                        android:textSize="14sp"
-                        android:textColor="#eeeeee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="24dp"
-                        android:paddingLeft="18dp"
-                        android:paddingRight="18dp" />
-                </RelativeLayout>
             </FrameLayout>
 
 
@@ -116,7 +86,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <ProgressBar
                 android:id="@+id/news_view_progress"
                 android:layout_gravity="center_horizontal"
@@ -124,11 +93,43 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"/>
 
-            <WebView
-                android:id="@+id/news_view_webView"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
 
+                <TextView
+                    android:id="@+id/news_view_title"
+                    android:paddingTop="24dp"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textSize="24sp"
+                    android:textColor="#444"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/news_view_subtitle"
+                    android:layout_below="@id/news_view_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textSize="14sp"
+                    android:textColor="#777"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="24dp"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp" />
+
+                <WebView
+                    android:id="@+id/news_view_webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/news_view_subtitle"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"/>
+
+            </RelativeLayout>
 
         </FrameLayout>
     </android.support.v4.widget.NestedScrollView>

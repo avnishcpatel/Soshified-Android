@@ -197,9 +197,8 @@ public class NewsListFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), NewsViewerActivity.class);
                     intent.putExtra("post", post);
                     Pair<View, String> p1 = Pair.create((View) holder.mNewsImage, "newsImage");
-                    Pair<View, String> p2 = Pair.create((View) holder.mNewsInfo, "newsInfo");
                     ActivityOptionsCompat options = ActivityOptionsCompat
-                            .makeSceneTransitionAnimation(getActivity(), p1, p2);
+                            .makeSceneTransitionAnimation(getActivity(), p1);
                     getActivity().startActivity(intent, options.toBundle());
                 }
             });
