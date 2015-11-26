@@ -8,6 +8,7 @@ public class Post implements Parcelable {
     public String title, date, excerpt, content, mThumbnail, mAuthor;
     public Images thumbnail_images;
     public Author author;
+    public int id;
 
     public String getImageUrl(){
         return thumbnail_images.large.url;
@@ -25,6 +26,7 @@ public class Post implements Parcelable {
         content = in.readString();
         mThumbnail = in.readString();
         mAuthor = in.readString();
+        id = in.readInt();
     }
 
     class Author {
@@ -54,6 +56,7 @@ public class Post implements Parcelable {
         dest.writeString(content);
         dest.writeString(thumbnail_images.large.url);
         dest.writeString(author.name);
+        dest.writeInt(id);
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {

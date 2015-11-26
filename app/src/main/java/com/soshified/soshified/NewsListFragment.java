@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.soshified.soshified.objects.Post;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Stack;
@@ -37,6 +39,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.GET;
+import retrofit.http.Query;
 
 /**
  * Fragment that handles displaying a list of news articles
@@ -45,9 +48,12 @@ public class NewsListFragment extends Fragment {
 
     @Bind(R.id.news_list) RecyclerView mNewsList;
     @Bind(R.id.toolbar) Toolbar mToolbar;
+    @Bind(R.id.news_list_swipe_refresh) SwipeRefreshLayout mRefreshLayout;
 
     private NewsAdapter mAdapter;
     private Context mContext;
+
+    private RestAdapter mRestAdapter;
 
     //Required empty constructor
     public NewsListFragment() {}
@@ -68,11 +74,45 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 200 && mAdapter != null){
+                if (dy > 200 && mAdapter != null) {
                     mAdapter.canAnimate(false);
                 } else if (mAdapter != null) {
                     mAdapter.canAnimate(true);
                 }
+            }
+        });
+
+        //Set refresh icon colour
+        mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mContext, R.color.primary));
+
+        //Setup refresh listener
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                GetRecentRequest request = mRestAdapter.create(GetRecentRequest.class);
+                request.newsList(new Callback<Posts>() {
+                    @Override
+                    public void success(Posts posts, Response response) {
+
+                        int topPostId = posts.posts.get(0).id;
+                        Stack<Post> newPosts = posts.posts;
+                        Collections.reverse(newPosts);
+
+                        for(Post post : newPosts){
+                            if(post.id != topPostId){
+                                mAdapter.addItemToDatasetStart(post);
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged();
+                        mRefreshLayout.setRefreshing(false);
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                });
             }
         });
 
@@ -85,12 +125,12 @@ public class NewsListFragment extends Fragment {
 
         mContext = getActivity();
         //Setting up Retrofit adapter
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://www.soshified.com/json")
+        mRestAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://soshified.com/json")
                 .build();
 
-        GetLatestRequest request = restAdapter.create(GetLatestRequest.class);
-        request.newsList(new Callback<Posts>() {
+        GetPagedRequest request = mRestAdapter.create(GetPagedRequest.class);
+        request.newsList(1, new Callback<Posts>() {
             @Override
             public void success(Posts posts, Response response) {
                 Stack<Post> mDataset = posts.posts;
@@ -110,10 +150,18 @@ public class NewsListFragment extends Fragment {
     }
 
     /**
-     * GET Request to fetch posts. The response should return the first 25 posts
+     * GET Request to fetch 'pages' of posts. Should return a page of 25 posts
      */
-    private interface GetLatestRequest {
-        @GET("/get_posts/?count=25")
+    private interface GetPagedRequest {
+        @GET("/get_posts?count=25")
+        void newsList(@Query("page") int page, Callback<Posts> callback);
+    }
+
+    /**
+     * GET Request to fetch most recent posts. Used when refreshing.
+     */
+    private interface GetRecentRequest {
+        @GET("/get_recent_posts")
         void newsList(Callback<Posts> callback);
     }
 
@@ -130,7 +178,6 @@ public class NewsListFragment extends Fragment {
             @Bind(R.id.news_list_item_title) TextView mNewsTitle;
             @Bind(R.id.news_list_item_subtitle) TextView mNewsSubtitle;
             @Bind(R.id.news_list_item_image) ImageView mNewsImage;
-            @Bind(R.id.news_list_item_info) RelativeLayout mNewsInfo;
             View itemView;
 
             public ViewHolder(View itemView) {
@@ -147,6 +194,14 @@ public class NewsListFragment extends Fragment {
 
         public void canAnimate(boolean canAnim){
             mCanAnimate = canAnim;
+        }
+
+        public Stack<Post> getDataset() {
+            return mDataset;
+        }
+
+        public void addItemToDatasetStart(Post post) {
+            mDataset.add(0, post);
         }
 
 
