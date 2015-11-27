@@ -34,6 +34,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textSize="18sp"
             android:textColor="#444"
+            android:maxLines="4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
