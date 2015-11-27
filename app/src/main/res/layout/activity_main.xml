@@ -10,12 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
+        <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/main_progress"
             android:layout_gravity="center"
             android:layout_margin="30dp"
             android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_height="50dp"
+            android:visibility="visible"
+            app:indicator="BallPulseSync"
+            app:indicator_color="@color/primary" />
 
         <FrameLayout
             android:id="@+id/fragment_container"

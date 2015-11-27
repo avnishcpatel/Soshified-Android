@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.wang.avi.AVLoadingIndicatorView;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -15,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static MainActivity mainActivity;
 
-    @Bind(R.id.main_progress) ProgressBar mProgress;
+    @Bind(R.id.main_progress) AVLoadingIndicatorView mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
