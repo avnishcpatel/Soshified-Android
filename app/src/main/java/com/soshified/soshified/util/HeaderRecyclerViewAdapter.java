@@ -24,10 +24,6 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
         mAdaptee = adaptee;
     }
 
-    public RecyclerView.Adapter getAdaptee() {
-        return mAdaptee;
-    }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER && mAdaptee instanceof HeaderRecyclerView) {
@@ -39,6 +35,7 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position == 0 && holder.getItemViewType() == TYPE_HEADER && useHeader()) {
             ((HeaderRecyclerView) mAdaptee).onBindHeaderView(holder, position);
@@ -62,17 +59,11 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     private boolean useHeader() {
-        if (mAdaptee instanceof HeaderRecyclerView) {
-            return true;
-        }
-        return false;
+        return mAdaptee instanceof HeaderRecyclerView;
     }
 
     private boolean useFooter() {
-        if (mAdaptee instanceof FooterRecyclerView) {
-            return true;
-        }
-        return false;
+        return mAdaptee instanceof FooterRecyclerView;
     }
 
     @Override
@@ -82,9 +73,6 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
         }
         if (position == mAdaptee.getItemCount() && useFooter()) {
             return TYPE_FOOTER;
-        }
-        if (mAdaptee.getItemCount() >= Integer.MAX_VALUE - TYPE_ADAPTEE_OFFSET) {
-            new IllegalStateException("HeaderRecyclerViewAdapter offsets your BasicItemType by " + TYPE_ADAPTEE_OFFSET + ".");
         }
         return mAdaptee.getItemViewType(position) + TYPE_ADAPTEE_OFFSET;
     }
@@ -105,16 +93,16 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
 
-    public static interface HeaderRecyclerView {
-        public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType);
+    public interface HeaderRecyclerView {
+        RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType);
 
-        public void onBindHeaderView(RecyclerView.ViewHolder holder, int position);
+        void onBindHeaderView(RecyclerView.ViewHolder holder, int position);
     }
 
-    public static interface FooterRecyclerView {
-        public RecyclerView.ViewHolder onCreateFooterViewHolder(ViewGroup parent, int viewType);
+    public interface FooterRecyclerView {
+        RecyclerView.ViewHolder onCreateFooterViewHolder(ViewGroup parent, int viewType);
 
-        public void onBindFooterView(RecyclerView.ViewHolder holder, int position);
+        void onBindFooterView(RecyclerView.ViewHolder holder, int position);
     }
 
 }
