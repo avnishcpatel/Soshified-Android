@@ -39,7 +39,7 @@
                     android:scaleType="centerCrop"
                     android:transitionName="newsImage"/>
 
-                <com.soshified.soshified.util.SquareImageView
+                <com.soshified.soshified.ui.SquareImageView
                     android:id="@+id/news_view_backdrop_blur"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

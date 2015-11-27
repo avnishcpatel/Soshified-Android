@@ -49,6 +49,8 @@ import butterknife.ButterKnife;
 public class NewsViewerActivity extends AppCompatActivity
         implements AppBarLayout.OnOffsetChangedListener{
 
+    //TODO Fix videos playing after close
+
     private Post mPost;
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;

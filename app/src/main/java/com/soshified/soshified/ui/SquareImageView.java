@@ -1,4 +1,4 @@
-package com.soshified.soshified.util;
+package com.soshified.soshified.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
