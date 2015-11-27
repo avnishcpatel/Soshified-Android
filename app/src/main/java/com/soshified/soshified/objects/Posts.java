@@ -7,5 +7,6 @@ import java.util.Stack;
  */
 public class Posts {
     public Stack<Post> posts;
+    public int count_total;
 }
 

@@ -13,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,9 @@ import android.widget.TextView;
 
 import com.soshified.soshified.objects.Post;
 import com.soshified.soshified.objects.Posts;
+import com.soshified.soshified.util.HeaderRecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,11 +52,12 @@ public class NewsListFragment extends Fragment {
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.news_list_swipe_refresh) SwipeRefreshLayout mRefreshLayout;
 
-    private NewsAdapter mAdapter;
+    private HeaderRecyclerViewAdapter mAdapter;
+    private LinearLayoutManager layoutManager;
     private Context mContext;
 
 
-    private int mItemsVisible, mItemsTotal, mItemsPast;
+    private int mItemsVisible, mItemsTotal, mItemsPast, mCountTotal;
     private int mLastRequestedPage = 1;
     private boolean mLoadingItems;
 
@@ -73,7 +75,7 @@ public class NewsListFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setTitle(mContext.getResources().getString(R.string.news_title));
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager = new LinearLayoutManager(mContext);
         mNewsList.setLayoutManager(layoutManager);
         mNewsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -94,22 +96,24 @@ public class NewsListFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(dy > 0) {
+
+
                     mItemsVisible = layoutManager.getChildCount();
                     mItemsTotal = layoutManager.getItemCount();
                     mItemsPast = layoutManager.findFirstVisibleItemPosition();
 
-                    if(!mLoadingItems && (mItemsVisible + mItemsPast) >= mItemsTotal - 5) {
+                    if(!mLoadingItems && (mItemsVisible + mItemsPast) >= mItemsTotal - 10) {
+                        mLoadingItems = true;
                         GetPagedRequest request = mRestAdapter.create(GetPagedRequest.class);
-                        request.newsList(mLastRequestedPage + 1, new Callback<Posts>() {
+                        mLastRequestedPage += 1;
+                        request.newsList(mLastRequestedPage, new Callback<Posts>() {
                             @Override
                             public void success(Posts posts, Response response) {
                                 Stack<Post> mPage = posts.posts;
-
-                                mLastRequestedPage =+ 1;
                                 mAdapter.addPage(mPage);
+
                                 mAdapter.notifyDataSetChanged();
-                                mItemsTotal =+ mPage.size();
-                                mLoadingItems = true;
+                                mLoadingItems = false;
 
                             }
 
@@ -175,10 +179,11 @@ public class NewsListFragment extends Fragment {
             @Override
             public void success(Posts posts, Response response) {
                 Stack<Post> mDataset = posts.posts;
+                mCountTotal = posts.count_total;
 
                 MainActivity.getInstance().toggleProgress();
 
-                mAdapter = new NewsAdapter(mDataset);
+                mAdapter = new HeaderRecyclerViewAdapter(new NewsAdapter(mDataset));
                 mNewsList.setAdapter(mAdapter);
 
             }
@@ -210,18 +215,31 @@ public class NewsListFragment extends Fragment {
      * List adapter for the NewsList. Handles all the layout stuff as well as
      * the Activity transitions
      */
-    public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
-        private Stack<Post> mDataset = new Stack<>();
-        private boolean mCanAnimate = true;
-        private int mLastAnimated = -1;
+    public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>
+        implements HeaderRecyclerViewAdapter.FooterRecyclerView{
 
-        public  class ViewHolder extends RecyclerView.ViewHolder {
+        private Stack<Post> mDataset = new Stack<>();
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
             @Bind(R.id.news_list_item_title) TextView mNewsTitle;
             @Bind(R.id.news_list_item_subtitle) TextView mNewsSubtitle;
             @Bind(R.id.news_list_item_image) ImageView mNewsImage;
+
             View itemView;
 
             public ViewHolder(View itemView) {
+                super(itemView);
+                this.itemView = itemView;
+                ButterKnife.bind(this, itemView);
+            }
+        }
+
+        public class ProgressViewHolder extends RecyclerView.ViewHolder {
+            @Bind(R.id.footer_loading_view) AVLoadingIndicatorView mLoadingView;
+
+            View itemView;
+
+            public ProgressViewHolder(View itemView) {
                 super(itemView);
                 this.itemView = itemView;
                 ButterKnife.bind(this, itemView);
@@ -233,19 +251,6 @@ public class NewsListFragment extends Fragment {
             this.mDataset = mDataset;
         }
 
-        public void canAnimate(boolean canAnim){
-            mCanAnimate = canAnim;
-        }
-
-        public void addPage(Stack<Post> mPage) {
-            mDataset.addAll(mPage);
-        }
-
-        public void addItemToDatasetStart(Post post) {
-            mDataset.add(0, post);
-        }
-
-
         // Create new views (invoked by the layout manager)
         @Override
         public NewsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -254,6 +259,14 @@ public class NewsListFragment extends Fragment {
                     parent, false);
 
             return new ViewHolder(v);
+        }
+
+        public void addPage(Stack<Post> mPage) {
+            mDataset.addAll(mPage);
+        }
+
+        public void addItemToDatasetStart(Post post) {
+            mDataset.add(0, post);
         }
 
         // Replace the contents of a view (invoked by the layout manager)
@@ -304,12 +317,25 @@ public class NewsListFragment extends Fragment {
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
 
-            if(position > mLastAnimated) {
-                if(mCanAnimate) holder.itemView.startAnimation(animation);
-                mLastAnimated = position;
+            if(position > mAdapter.mLastAnimated) {
+                if(mAdapter.mCanAnimate) holder.itemView.startAnimation(animation);
+                mAdapter.mLastAnimated = position;
             }
 
 
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateFooterViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_list_progress_item, parent, false);
+            return new ProgressViewHolder(view);
+        }
+
+        @Override
+        public void onBindFooterView(RecyclerView.ViewHolder holder, int position) {
+            if(mDataset.size() >= mCountTotal) {
+                ((ProgressViewHolder)holder).mLoadingView.setVisibility(View.INVISIBLE);
+            }
         }
 
         // Return the size of your dataset (invoked by the layout manager)
