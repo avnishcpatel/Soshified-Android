@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,11 @@ public class NewsListFragment extends Fragment {
     private NewsAdapter mAdapter;
     private Context mContext;
 
+
+    private int mItemsVisible, mItemsTotal, mItemsPast;
+    private int mLastRequestedPage = 1;
+    private boolean mLoadingItems;
+
     private RestAdapter mRestAdapter;
 
     //Required empty constructor
@@ -67,7 +73,7 @@ public class NewsListFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setTitle(mContext.getResources().getString(R.string.news_title));
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mNewsList.setLayoutManager(layoutManager);
         mNewsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -78,6 +84,41 @@ public class NewsListFragment extends Fragment {
                     mAdapter.canAnimate(false);
                 } else if (mAdapter != null) {
                     mAdapter.canAnimate(true);
+                }
+            }
+        });
+
+        //Setup scroll listener so we can add new pages
+        mNewsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 0) {
+                    mItemsVisible = layoutManager.getChildCount();
+                    mItemsTotal = layoutManager.getItemCount();
+                    mItemsPast = layoutManager.findFirstVisibleItemPosition();
+
+                    if(!mLoadingItems && (mItemsVisible + mItemsPast) >= mItemsTotal - 5) {
+                        GetPagedRequest request = mRestAdapter.create(GetPagedRequest.class);
+                        request.newsList(mLastRequestedPage + 1, new Callback<Posts>() {
+                            @Override
+                            public void success(Posts posts, Response response) {
+                                Stack<Post> mPage = posts.posts;
+
+                                mLastRequestedPage =+ 1;
+                                mAdapter.addPage(mPage);
+                                mAdapter.notifyDataSetChanged();
+                                mItemsTotal =+ mPage.size();
+                                mLoadingItems = true;
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                error.printStackTrace();
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -130,7 +171,7 @@ public class NewsListFragment extends Fragment {
                 .build();
 
         GetPagedRequest request = mRestAdapter.create(GetPagedRequest.class);
-        request.newsList(1, new Callback<Posts>() {
+        request.newsList(mLastRequestedPage, new Callback<Posts>() {
             @Override
             public void success(Posts posts, Response response) {
                 Stack<Post> mDataset = posts.posts;
@@ -196,8 +237,8 @@ public class NewsListFragment extends Fragment {
             mCanAnimate = canAnim;
         }
 
-        public Stack<Post> getDataset() {
-            return mDataset;
+        public void addPage(Stack<Post> mPage) {
+            mDataset.addAll(mPage);
         }
 
         public void addItemToDatasetStart(Post post) {
