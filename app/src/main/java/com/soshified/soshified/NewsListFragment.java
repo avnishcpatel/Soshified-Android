@@ -18,13 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soshified.soshified.objects.Post;
 import com.soshified.soshified.objects.Posts;
 import com.soshified.soshified.util.HeaderRecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -223,7 +223,7 @@ public class NewsListFragment extends Fragment {
         }
 
         public class ProgressViewHolder extends RecyclerView.ViewHolder {
-            @Bind(R.id.footer_loading_view) AVLoadingIndicatorView mLoadingView;
+            @Bind(R.id.footer_loading_view) ProgressBar mLoadingView;
 
             View itemView;
 
@@ -312,6 +312,8 @@ public class NewsListFragment extends Fragment {
 
         @Override
         public void onBindFooterView(RecyclerView.ViewHolder holder, int position) {
+            ((ProgressViewHolder)holder).mLoadingView.animate();
+            ((ProgressViewHolder)holder).mLoadingView.setVisibility(View.VISIBLE);
             if(mDataset.size() >= mCountTotal) {
                 ((ProgressViewHolder)holder).mLoadingView.setVisibility(View.INVISIBLE);
             }

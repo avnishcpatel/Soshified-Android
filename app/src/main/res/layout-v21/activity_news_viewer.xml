@@ -91,7 +91,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="30dp"
                 android:layout_width="50dp"
-                android:layout_height="50dp"/>
+                android:layout_height="50dp"
+                android:indeterminateTint="@color/primary"
+                android:indeterminateTintMode="src_in"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
