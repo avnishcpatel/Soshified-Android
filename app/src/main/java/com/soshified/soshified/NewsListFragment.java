@@ -48,7 +48,6 @@ import retrofit.http.Query;
 public class NewsListFragment extends Fragment {
 
     @Bind(R.id.news_list) RecyclerView mNewsList;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.news_list_swipe_refresh) SwipeRefreshLayout mRefreshLayout;
 
     private HeaderRecyclerViewAdapter mAdapter;
@@ -69,10 +68,6 @@ public class NewsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_list, group, false);
         ButterKnife.bind(this, view);
-
-
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        mToolbar.setTitle(mContext.getResources().getString(R.string.news_title));
 
         layoutManager = new LinearLayoutManager(mContext);
         mNewsList.setItemAnimator(new DefaultItemAnimator());
@@ -286,7 +281,7 @@ public class NewsListFragment extends Fragment {
 
             Picasso.with(mContext)
                     .load(mImageUrl)
-                    .error(R.color.primary_dark)
+                    .error(R.color.primary)
                     .placeholder(R.color.primary_light)
                     .into(holder.mNewsImage);
 

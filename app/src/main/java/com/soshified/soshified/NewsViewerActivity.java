@@ -114,7 +114,7 @@ public class NewsViewerActivity extends AppCompatActivity
 
         Picasso.with(this)
                 .load(mImageUrl)
-                .error(R.color.primary_dark)
+                .error(R.color.primary)
                 .placeholder(R.color.primary_light)
                 .into(mBackdrop, new Callback() {
                     @Override
