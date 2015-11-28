@@ -278,7 +278,7 @@ public class NewsListFragment extends Fragment {
 
             String mImageUrl;
 
-            if(post.getImageUrl().contains(" ")){
+            if(post.getImageUrl() != null && post.getImageUrl().contains(" ")){
                  mImageUrl = post.getImageUrl().replaceAll(" ", "%20");
             } else {
                 mImageUrl = post.getImageUrl();

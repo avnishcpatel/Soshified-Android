@@ -11,7 +11,10 @@ public class Post implements Parcelable {
     public int id;
 
     public String getImageUrl(){
-        return thumbnail_images.large.url;
+        if (thumbnail_images != null)
+            return thumbnail_images.large.url;
+        else
+            return null;
     }
 
     public String getAuthor() {
@@ -54,7 +57,10 @@ public class Post implements Parcelable {
         dest.writeString(date);
         dest.writeString(excerpt);
         dest.writeString(content);
-        dest.writeString(thumbnail_images.large.url);
+        if(thumbnail_images != null)
+            dest.writeString(thumbnail_images.large.url);
+        else
+            dest.writeString(null);
         dest.writeString(author.name);
         dest.writeInt(id);
     }
