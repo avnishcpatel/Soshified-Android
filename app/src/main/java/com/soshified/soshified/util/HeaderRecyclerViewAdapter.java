@@ -13,10 +13,6 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
     private static final int TYPE_FOOTER = Integer.MIN_VALUE + 1;
     private static final int TYPE_ADAPTEE_OFFSET = 2;
 
-
-    public boolean mCanAnimate = true;
-    public int mLastAnimated = -1;
-
     private final RecyclerView.Adapter mAdaptee;
 
 
@@ -76,13 +72,6 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
         }
         return mAdaptee.getItemViewType(position) + TYPE_ADAPTEE_OFFSET;
     }
-
-
-
-    public void canAnimate(boolean canAnim){
-        mCanAnimate = canAnim;
-    }
-
 
     public void addPage(Stack<Post> mPage) {
         ((NewsListFragment.NewsAdapter)mAdaptee).addPage(mPage);

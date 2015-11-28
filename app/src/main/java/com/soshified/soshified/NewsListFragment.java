@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +17,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -76,19 +75,8 @@ public class NewsListFragment extends Fragment {
         mToolbar.setTitle(mContext.getResources().getString(R.string.news_title));
 
         layoutManager = new LinearLayoutManager(mContext);
+        mNewsList.setItemAnimator(new DefaultItemAnimator());
         mNewsList.setLayoutManager(layoutManager);
-        mNewsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 200 && mAdapter != null) {
-                    mAdapter.canAnimate(false);
-                } else if (mAdapter != null) {
-                    mAdapter.canAnimate(true);
-                }
-            }
-        });
 
         //Setup scroll listener so we can add new pages
         mNewsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -146,9 +134,9 @@ public class NewsListFragment extends Fragment {
                         for(Post post : newPosts){
                             if(post.id != topPostId){
                                 mAdapter.addItemToDatasetStart(post);
+                                mAdapter.notifyItemInserted(0);
                             }
                         }
-                        mAdapter.notifyDataSetChanged();
                         mRefreshLayout.setRefreshing(false);
 
                     }
@@ -313,15 +301,6 @@ public class NewsListFragment extends Fragment {
                     getActivity().startActivity(intent, options.toBundle());
                 }
             });
-
-
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
-
-            if(position > mAdapter.mLastAnimated) {
-                if(mAdapter.mCanAnimate) holder.itemView.startAnimation(animation);
-                mAdapter.mLastAnimated = position;
-            }
-
 
         }
 
