@@ -1,5 +1,6 @@
 package com.soshified.soshified.view.activity;
 
+import android.annotation.SuppressLint;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity mainActivity;
 
     @Bind(R.id.main_progress) ProgressBar mProgress;
-    @Bind(R.id.main_navigation_view) NavigationView mNavigationView;
     @Bind(R.id.main_navigation_drawer)  DrawerLayout mNavigationDrawer;
     @Bind(R.id.toolbar) Toolbar mToolbar;
 
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("RtlHardcoded")
     private void toggleDrawer() {
         if(mNavigationDrawer.isDrawerOpen(Gravity.LEFT)) {
             mNavigationDrawer.closeDrawer(Gravity.LEFT);

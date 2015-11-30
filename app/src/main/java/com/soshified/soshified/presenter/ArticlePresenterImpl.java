@@ -7,7 +7,7 @@ import com.soshified.soshified.util.TextUtils;
 import com.soshified.soshified.view.ArticleView;
 
 /**
- * Presenter Implementation to deal with all the 'presenter' stuff
+ * Presenter Implementation to deal with all the 'presenter' stuff for ArticleView
  */
 public class ArticlePresenterImpl implements ArticlePresenter {
 

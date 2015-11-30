@@ -11,7 +11,7 @@ import retrofit.http.GET;
 import retrofit.http.Query;
 
 /**
- * Created by David on 1/12/15.
+ * Presenter Implementation to deal with all the 'presenter' stuff for ArticleListView
  */
 public class ArticleListPresenterImpl implements ArticleListPresenter {
 

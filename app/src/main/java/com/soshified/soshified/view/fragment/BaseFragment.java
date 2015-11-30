@@ -12,7 +12,7 @@ import java.util.List;
 import dagger.ObjectGraph;
 
 /**
- * Created by David on 30/11/15.
+ * Base Fragment which handles Dagge Injections
  */
 public class BaseFragment extends Fragment {
 

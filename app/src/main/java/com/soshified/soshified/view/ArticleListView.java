@@ -3,7 +3,7 @@ package com.soshified.soshified.view;
 import com.soshified.soshified.model.ArticleList;
 
 /**
- * Created by David on 1/12/15.
+ * View component for viewing the Article List
  */
 public interface ArticleListView {
 

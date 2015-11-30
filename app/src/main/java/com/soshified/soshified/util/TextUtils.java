@@ -14,8 +14,16 @@ public class TextUtils {
         return Html.fromHtml(originalString).toString().trim();
     }
 
-    public static String formatStringRes(Context context, int resId, String[] ghgh) {
+    public static String formatStringRes(Context context, int resId, String[] strings) {
         String mStringResource = context.getString(resId);
-        return String.format(mStringResource, ghgh);
+        return String.format(mStringResource, strings);
+    }
+
+    public static String validateImageUrl(String url){
+        if(url != null && url.contains(" ")){
+            return url.replaceAll(" ", "%20");
+        } else {
+            return url;
+        }
     }
 }

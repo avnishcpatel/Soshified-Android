@@ -64,11 +64,11 @@ public class ArticleListFragment extends BaseFragment implements ArticleListView
     @Override
     public void loadArticles(ArticleList articleList) {
 
-                MainActivity.getInstance().toggleProgress();
+        MainActivity.getInstance().toggleProgress();
 
-                mAdapter = new HeaderRecyclerViewAdapter(new ArticleAdapter((AppCompatActivity)
-                        getActivity(), articleList));
-                mNewsList.setAdapter(mAdapter);
+        mAdapter = new HeaderRecyclerViewAdapter(new ArticleAdapter((AppCompatActivity)
+                getActivity(), articleList));
+        mNewsList.setAdapter(mAdapter);
     }
 
     @Override

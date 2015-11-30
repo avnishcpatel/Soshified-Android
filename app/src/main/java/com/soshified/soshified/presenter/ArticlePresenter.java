@@ -3,9 +3,6 @@ package com.soshified.soshified.presenter;
 
 import com.soshified.soshified.model.Article;
 
-/**
- * Presenter for all the post based sub sites (News, Style, etc)
- */
 public interface ArticlePresenter {
 
     void init(Article mArticle);

@@ -1,7 +1,7 @@
 package com.soshified.soshified.view;
 
 /**
- * View component for the post based sub sites (News, Style, etc)
+ * View component for the viewing an Article
  */
 public interface ArticleView {
 

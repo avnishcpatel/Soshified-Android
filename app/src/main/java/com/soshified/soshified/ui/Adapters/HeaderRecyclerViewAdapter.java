@@ -7,6 +7,9 @@ import com.soshified.soshified.model.Article;
 
 import java.util.Stack;
 
+/**
+ * Wrapper adapter that adds the ability to add headers and footers to RecyclerView
+ */
 public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
     private static final int TYPE_HEADER = Integer.MIN_VALUE;
     private static final int TYPE_FOOTER = Integer.MIN_VALUE + 1;

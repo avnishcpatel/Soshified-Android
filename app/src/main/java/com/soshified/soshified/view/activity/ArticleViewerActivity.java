@@ -124,16 +124,8 @@ public class ArticleViewerActivity extends BaseActivity implements ArticleView {
     @Override
     public void loadHeaderImage(String imageUrl) {
 
-        String mImageUrl;
-
-        if(imageUrl.contains(" ")){
-            mImageUrl = imageUrl.replaceAll(" ", "%20");
-        } else {
-            mImageUrl = imageUrl;
-        }
-
         Picasso.with(this)
-                .load(mImageUrl)
+                .load(TextUtils.validateImageUrl(imageUrl))
                 .error(R.color.primary)
                 .placeholder(R.color.primary_light)
                 .into(mBackdrop, new Callback() {

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by David on 30/11/15.
+ * Utility methods for working with Dates
  */
 public class DateUtils {
 

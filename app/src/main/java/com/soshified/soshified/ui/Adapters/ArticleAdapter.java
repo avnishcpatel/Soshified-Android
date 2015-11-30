@@ -16,20 +16,18 @@ import android.widget.TextView;
 import com.soshified.soshified.R;
 import com.soshified.soshified.model.Article;
 import com.soshified.soshified.model.ArticleList;
+import com.soshified.soshified.util.DateUtils;
+import com.soshified.soshified.util.TextUtils;
 import com.soshified.soshified.view.activity.ArticleViewerActivity;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Stack;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * List adapter for the NewsList. Handles all the layout stuff as well as
+ * List adapter for the ArticleList. Handles all the layout stuff as well as
  * the Activity transitions
  */
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder>
@@ -101,27 +99,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         holder.mNewsTitle.setText(Html.fromHtml(article.title));
 
-        SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                Locale.ENGLISH);
-        SimpleDateFormat toFormat = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
-        try {
-            Date date = fromFormat.parse(article.date);
-            String subtitle = "Posted by " + article.getAuthor() + " on " + toFormat.format(date);
-            holder.mNewsSubtitle.setText(subtitle);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        String mImageUrl;
-
-        if(article.getImageUrl() != null && article.getImageUrl().contains(" ")){
-            mImageUrl = article.getImageUrl().replaceAll(" ", "%20");
-        } else {
-            mImageUrl = article.getImageUrl();
-        }
+        holder.mNewsSubtitle.setText(TextUtils.formatStringRes(mActivity,
+                R.string.post_subtitle, new String[]{article.getAuthor(),
+                        DateUtils.parseWordPressFormat(article.date)}));
 
         Picasso.with(mActivity)
-                .load(mImageUrl)
+                .load(TextUtils.validateImageUrl(article.getImageUrl()))
                 .error(R.color.primary)
                 .placeholder(R.color.primary_light)
                 .into(holder.mNewsImage);
