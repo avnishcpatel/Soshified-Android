@@ -4,4 +4,5 @@
     <string name="action_settings">Settings</string>
     <string name="news_style">Style</string>
     <string name="description_featured_image">Article Featured Image</string>
+    <string name="post_subtitle">Posted by %1$s on %2$s</string>
 </resources>

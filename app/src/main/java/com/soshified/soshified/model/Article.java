@@ -1,9 +1,12 @@
-package com.soshified.soshified.objects;
+package com.soshified.soshified.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Post implements Parcelable {
+/**
+ * Object representation of a single article (Wordpress Post)
+ */
+public class Article implements Parcelable {
 
     public String title, date, excerpt, content, mThumbnail, mAuthor;
     public Images thumbnail_images;
@@ -22,7 +25,7 @@ public class Post implements Parcelable {
     }
 
 
-    private Post(Parcel in) {
+    private Article(Parcel in) {
         title = in.readString();
         date = in.readString();
         excerpt = in.readString();
@@ -65,13 +68,13 @@ public class Post implements Parcelable {
         dest.writeInt(id);
     }
 
-    public static final Creator<Post> CREATOR = new Creator<Post>() {
-        public Post createFromParcel(Parcel in) {
-            return new Post(in);
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        public Article createFromParcel(Parcel in) {
+            return new Article(in);
         }
 
-        public Post[] newArray(int size) {
-            return new Post[size];
+        public Article[] newArray(int size) {
+            return new Article[size];
         }
     };
 

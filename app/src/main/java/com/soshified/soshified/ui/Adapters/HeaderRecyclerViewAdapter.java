@@ -1,13 +1,15 @@
-package com.soshified.soshified.util;
+package com.soshified.soshified.ui.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.soshified.soshified.NewsListFragment;
-import com.soshified.soshified.objects.Post;
+import com.soshified.soshified.model.Article;
 
 import java.util.Stack;
 
+/**
+ * Wrapper adapter that adds the ability to add headers and footers to RecyclerView
+ */
 public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
     private static final int TYPE_HEADER = Integer.MIN_VALUE;
     private static final int TYPE_FOOTER = Integer.MIN_VALUE + 1;
@@ -73,12 +75,12 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
         return mAdaptee.getItemViewType(position) + TYPE_ADAPTEE_OFFSET;
     }
 
-    public void addPage(Stack<Post> mPage) {
-        ((NewsListFragment.NewsAdapter)mAdaptee).addPage(mPage);
+    public void addPage(Stack<Article> mPage) {
+        ((ArticleAdapter)mAdaptee).addPage(mPage);
     }
 
-    public void addItemToDatasetStart(Post post) {
-        ((NewsListFragment.NewsAdapter)mAdaptee).addItemToDatasetStart(post);
+    public void addItemToDatasetStart(Article article) {
+        ((ArticleAdapter)mAdaptee).addItemToDatasetStart(article);
     }
 
 
