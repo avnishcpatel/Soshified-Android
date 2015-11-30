@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.soshified.soshified.Soshified;
-import com.soshified.soshified.modules.PostModule;
+import com.soshified.soshified.modules.ArticleModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class BaseActivity extends AppCompatActivity {
         mObjectGraph = null;
     }
 
-    protected List<PostModule> getModules() {
+    protected List<ArticleModule> getModules() {
         return new ArrayList<>();
     }
 }

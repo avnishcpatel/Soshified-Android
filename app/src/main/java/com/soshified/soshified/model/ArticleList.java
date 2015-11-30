@@ -3,10 +3,10 @@ package com.soshified.soshified.model;
 import java.util.Stack;
 
 /**
- * Mapping of  /posts
+ * Mapping of /get_posts
  */
-public class PostList {
-    public Stack<Post> posts;
+public class ArticleList {
+    public Stack<Article> posts;
     public int count_total;
 }
 

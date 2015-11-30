@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.view.fragment.NewsListFragment;
+import com.soshified.soshified.view.fragment.ArticleListFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainActivity = this;
 
-        changeFragment(new NewsListFragment());
+        changeFragment(new ArticleListFragment());
     }
 
 

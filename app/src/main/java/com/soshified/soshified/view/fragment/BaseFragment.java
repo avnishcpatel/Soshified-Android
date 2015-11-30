@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.soshified.soshified.Soshified;
-import com.soshified.soshified.modules.PostListModule;
+import com.soshified.soshified.modules.ArticleListModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class BaseFragment extends Fragment {
         mObjectGraph = null;
     }
 
-    protected List<PostListModule> getModules() {
+    protected List<ArticleListModule> getModules() {
         return new ArrayList<>();
     }
 }

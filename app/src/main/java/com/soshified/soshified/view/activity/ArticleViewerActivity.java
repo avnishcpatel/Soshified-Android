@@ -21,12 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.model.Post;
-import com.soshified.soshified.modules.PostModule;
-import com.soshified.soshified.presenter.PostPresenter;
+import com.soshified.soshified.model.Article;
+import com.soshified.soshified.modules.ArticleModule;
+import com.soshified.soshified.presenter.ArticlePresenter;
 import com.soshified.soshified.util.AnimUtils;
 import com.soshified.soshified.util.TextUtils;
-import com.soshified.soshified.view.PostView;
+import com.soshified.soshified.view.ArticleView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class NewsViewerActivity extends BaseActivity implements PostView {
+public class ArticleViewerActivity extends BaseActivity implements ArticleView {
 
     //TODO Fix videos playing after close
 
@@ -46,7 +46,8 @@ public class NewsViewerActivity extends BaseActivity implements PostView {
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;
 
-    @Inject PostPresenter postPresenter;
+    @Inject
+    ArticlePresenter articlePresenter;
 
     @Bind(R.id.news_view_toolbar)  Toolbar mToolbar;
     @Bind(R.id.news_view_appbar) AppBarLayout mAppBarLayout;
@@ -67,7 +68,7 @@ public class NewsViewerActivity extends BaseActivity implements PostView {
         setContentView(R.layout.activity_news_viewer);
 
         ButterKnife.bind(this);
-        postPresenter.init((Post) getIntent().getParcelableExtra("post"));
+        articlePresenter.init((Article) getIntent().getParcelableExtra("article"));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Transition.TransitionListener returnHomeListener = new AnimUtils.TransitionListenerAdapter(){
@@ -79,7 +80,7 @@ public class NewsViewerActivity extends BaseActivity implements PostView {
                         mScrollView.animate()
                                 .alpha(0f)
                                 .setDuration(100)
-                                .setInterpolator(AnimationUtils.loadInterpolator(NewsViewerActivity.this,
+                                .setInterpolator(AnimationUtils.loadInterpolator(ArticleViewerActivity.this,
                                         android.R.interpolator.linear_out_slow_in));
                     }
                 }
@@ -90,8 +91,8 @@ public class NewsViewerActivity extends BaseActivity implements PostView {
     }
 
     @Override
-    protected List<PostModule> getModules() {
-        return Collections.singletonList(new PostModule(this));
+    protected List<ArticleModule> getModules() {
+        return Collections.singletonList(new ArticleModule(this));
     }
 
     /**
@@ -142,7 +143,7 @@ public class NewsViewerActivity extends BaseActivity implements PostView {
                         Drawable drawable = mBackdrop.getDrawable();
 
                         if (drawable instanceof BitmapDrawable) {
-                            BitmapDrawable mBlurredBitmap = AnimUtils.blur(NewsViewerActivity.this,
+                            BitmapDrawable mBlurredBitmap = AnimUtils.blur(ArticleViewerActivity.this,
                                     ((BitmapDrawable) drawable).getBitmap());
                             mBlurredBackdrop.setBackground(mBlurredBitmap);
                         }
@@ -216,7 +217,7 @@ public class NewsViewerActivity extends BaseActivity implements PostView {
     @Override
     public void loadPostMeta(String title, String author, String date) {
         mTitle.setText(title);
-        mSubTitle.setText(TextUtils.formatStringRes(NewsViewerActivity.this,
+        mSubTitle.setText(TextUtils.formatStringRes(ArticleViewerActivity.this,
                 R.string.post_subtitle, new String[]{author, date}));
 
 

@@ -2,33 +2,33 @@ package com.soshified.soshified.modules;
 
 import com.soshified.soshified.presenter.ArticleListPresenter;
 import com.soshified.soshified.presenter.ArticleListPresenterImpl;
-import com.soshified.soshified.view.PostListView;
-import com.soshified.soshified.view.fragment.NewsListFragment;
+import com.soshified.soshified.view.ArticleListView;
+import com.soshified.soshified.view.fragment.ArticleListFragment;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = NewsListFragment.class,
+        injects = ArticleListFragment.class,
         addsTo = SoshifiedModule.class,
         library = true,
         complete = false
 )
-public class PostListModule {
+public class ArticleListModule {
 
-    private PostListView mArticleListView;
+    private ArticleListView mArticleListView;
 
-    public PostListModule(PostListView mArticleListView) {
+    public ArticleListModule(ArticleListView mArticleListView) {
         this.mArticleListView = mArticleListView;
     }
 
     @Provides
-    public PostListView provideView() {
+    public ArticleListView provideView() {
         return mArticleListView;
     }
 
     @Provides
-    public ArticleListPresenter providePresenter(PostListView articleListView) {
+    public ArticleListPresenter providePresenter(ArticleListView articleListView) {
         return new ArticleListPresenterImpl(articleListView);
     }
 }

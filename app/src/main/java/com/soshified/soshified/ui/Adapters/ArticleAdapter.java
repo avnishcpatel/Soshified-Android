@@ -1,6 +1,5 @@
 package com.soshified.soshified.ui.Adapters;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -15,9 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.model.Post;
-import com.soshified.soshified.model.PostList;
-import com.soshified.soshified.view.activity.NewsViewerActivity;
+import com.soshified.soshified.model.Article;
+import com.soshified.soshified.model.ArticleList;
+import com.soshified.soshified.view.activity.ArticleViewerActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -36,7 +35,7 @@ import butterknife.ButterKnife;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder>
         implements HeaderRecyclerViewAdapter.FooterRecyclerView{
 
-    private Stack<Post> mDataset = new Stack<>();
+    private Stack<Article> mDataset = new Stack<>();
     private AppCompatActivity mActivity;
     private int mCountTotal;
 
@@ -69,7 +68,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         }
     }
 
-    public ArticleAdapter(AppCompatActivity activity, PostList posts) {
+    public ArticleAdapter(AppCompatActivity activity, ArticleList posts) {
         super();
         this.mDataset = posts.posts;
         this.mActivity = activity;
@@ -86,28 +85,28 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         return new ViewHolder(v);
     }
 
-    public void addPage(Stack<Post> mPage) {
+    public void addPage(Stack<Article> mPage) {
         mDataset.addAll(mPage);
     }
 
-    public void addItemToDatasetStart(Post post) {
-        mDataset.add(0, post);
+    public void addItemToDatasetStart(Article article) {
+        mDataset.add(0, article);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Post post = mDataset.get(position);
+        final Article article = mDataset.get(position);
 
-        holder.mNewsTitle.setText(Html.fromHtml(post.title));
+        holder.mNewsTitle.setText(Html.fromHtml(article.title));
 
         SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
                 Locale.ENGLISH);
         SimpleDateFormat toFormat = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
         try {
-            Date date = fromFormat.parse(post.date);
-            String subtitle = "Posted by " + post.getAuthor() + " on " + toFormat.format(date);
+            Date date = fromFormat.parse(article.date);
+            String subtitle = "Posted by " + article.getAuthor() + " on " + toFormat.format(date);
             holder.mNewsSubtitle.setText(subtitle);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -115,10 +114,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         String mImageUrl;
 
-        if(post.getImageUrl() != null && post.getImageUrl().contains(" ")){
-            mImageUrl = post.getImageUrl().replaceAll(" ", "%20");
+        if(article.getImageUrl() != null && article.getImageUrl().contains(" ")){
+            mImageUrl = article.getImageUrl().replaceAll(" ", "%20");
         } else {
-            mImageUrl = post.getImageUrl();
+            mImageUrl = article.getImageUrl();
         }
 
         Picasso.with(mActivity)
@@ -130,8 +129,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity, NewsViewerActivity.class);
-                intent.putExtra("post", post);
+                Intent intent = new Intent(mActivity, ArticleViewerActivity.class);
+                intent.putExtra("article", article);
                 Pair<View, String> p1 = Pair.create((View) holder.mNewsImage, "newsImage");
                 ActivityOptionsCompat options = ActivityOptionsCompat
                         .makeSceneTransitionAnimation(mActivity, p1);

@@ -12,14 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.model.Post;
-import com.soshified.soshified.model.PostList;
-import com.soshified.soshified.modules.PostListModule;
+import com.soshified.soshified.model.Article;
+import com.soshified.soshified.model.ArticleList;
+import com.soshified.soshified.modules.ArticleListModule;
 import com.soshified.soshified.presenter.ArticleListPresenter;
 import com.soshified.soshified.presenter.ArticleListPresenterImpl;
 import com.soshified.soshified.ui.Adapters.ArticleAdapter;
 import com.soshified.soshified.ui.Adapters.HeaderRecyclerViewAdapter;
-import com.soshified.soshified.view.PostListView;
+import com.soshified.soshified.view.ArticleListView;
 import com.soshified.soshified.view.activity.MainActivity;
 
 import java.util.Collections;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 /**
  * Fragment that handles displaying a list of news articles
  */
-public class NewsListFragment extends BaseFragment implements PostListView {
+public class ArticleListFragment extends BaseFragment implements ArticleListView {
 
     @Inject ArticleListPresenter mArticleListPresenter;
 
@@ -49,7 +49,7 @@ public class NewsListFragment extends BaseFragment implements PostListView {
     private boolean mLoadingItems;
 
     //Required empty constructor
-    public NewsListFragment() {}
+    public ArticleListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle savedInstanceState) {
@@ -62,18 +62,18 @@ public class NewsListFragment extends BaseFragment implements PostListView {
     }
 
     @Override
-    public void loadArticles(PostList postList) {
+    public void loadArticles(ArticleList articleList) {
 
                 MainActivity.getInstance().toggleProgress();
 
                 mAdapter = new HeaderRecyclerViewAdapter(new ArticleAdapter((AppCompatActivity)
-                        getActivity(), postList));
+                        getActivity(), articleList));
                 mNewsList.setAdapter(mAdapter);
     }
 
     @Override
-    protected List<PostListModule> getModules() {
-        return Collections.singletonList(new PostListModule(this));
+    protected List<ArticleListModule> getModules() {
+        return Collections.singletonList(new ArticleListModule(this));
     }
 
     @Override
@@ -119,16 +119,16 @@ public class NewsListFragment extends BaseFragment implements PostListView {
     }
 
     @Override
-    public void refreshCompleted(boolean success, PostList postList) {
+    public void refreshCompleted(boolean success, ArticleList articleList) {
 
         if(success){
-            int topPostId = postList.posts.get(0).id;
-            Stack<Post> newPosts = postList.posts;
-            Collections.reverse(newPosts);
+            int topPostId = articleList.posts.get(0).id;
+            Stack<Article> newArticles = articleList.posts;
+            Collections.reverse(newArticles);
 
-            for(Post post : newPosts){
-                if(post.id != topPostId){
-                    mAdapter.addItemToDatasetStart(post);
+            for(Article article : newArticles){
+                if(article.id != topPostId){
+                    mAdapter.addItemToDatasetStart(article);
                     mAdapter.notifyItemInserted(0);
                 }
             }
@@ -141,10 +141,10 @@ public class NewsListFragment extends BaseFragment implements PostListView {
     }
 
     @Override
-    public void addNewPage(boolean success, PostList postList) {
+    public void addNewPage(boolean success, ArticleList articleList) {
 
         if(success){
-            Stack<Post> mPage = postList.posts;
+            Stack<Article> mPage = articleList.posts;
             mAdapter.addPage(mPage);
 
             mAdapter.notifyDataSetChanged();
