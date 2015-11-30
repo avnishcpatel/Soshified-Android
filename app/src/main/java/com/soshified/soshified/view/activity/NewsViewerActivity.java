@@ -26,7 +26,7 @@ import com.soshified.soshified.modules.PostModule;
 import com.soshified.soshified.presenter.PostPresenter;
 import com.soshified.soshified.util.AnimUtils;
 import com.soshified.soshified.util.TextUtils;
-import com.soshified.soshified.view.BasePostView;
+import com.soshified.soshified.view.PostView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class NewsViewerActivity extends BaseActivity implements BasePostView{
+public class NewsViewerActivity extends BaseActivity implements PostView {
 
     //TODO Fix videos playing after close
 

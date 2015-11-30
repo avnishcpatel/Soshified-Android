@@ -74,11 +74,11 @@ public class HeaderRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     public void addPage(Stack<Post> mPage) {
-        ((NewsListFragment.NewsAdapter)mAdaptee).addPage(mPage);
+        ((ArticleAdapter)mAdaptee).addPage(mPage);
     }
 
     public void addItemToDatasetStart(Post post) {
-        ((NewsListFragment.NewsAdapter)mAdaptee).addItemToDatasetStart(post);
+        ((ArticleAdapter)mAdaptee).addItemToDatasetStart(post);
     }
 
 

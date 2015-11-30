@@ -4,17 +4,17 @@ import com.soshified.soshified.model.Post;
 import com.soshified.soshified.util.DateUtils;
 import com.soshified.soshified.util.ParseContent;
 import com.soshified.soshified.util.TextUtils;
-import com.soshified.soshified.view.BasePostView;
+import com.soshified.soshified.view.PostView;
 
 /**
  * Presenter Implementation to deal with all the 'presenter' stuff
  */
 public class PostPresenterImpl implements PostPresenter {
 
-    BasePostView mView;
+    PostView mView;
     Post mPost;
 
-    public PostPresenterImpl(BasePostView view) {
+    public PostPresenterImpl(PostView view) {
         this.mView = view;
     }
 

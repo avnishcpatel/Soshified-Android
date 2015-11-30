@@ -14,8 +14,8 @@ public class TextUtils {
         return Html.fromHtml(originalString).toString().trim();
     }
 
-    public static String formatStringRes(Context context, int resId, String[] strings) {
+    public static String formatStringRes(Context context, int resId, String[] ghgh) {
         String mStringResource = context.getString(resId);
-        return String.format(mStringResource, strings);
+        return String.format(mStringResource, ghgh);
     }
 }

@@ -24,9 +24,6 @@ public class BaseActivity extends AppCompatActivity {
 
         mObjectGraph = Soshified.getApplication(this).buildScopedObjectGraph(getModules().toArray());
         mObjectGraph.inject(this);
-
-        getSupportActionBar();
-
     }
 
     @Override

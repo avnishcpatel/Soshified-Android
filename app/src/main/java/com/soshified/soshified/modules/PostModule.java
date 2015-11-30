@@ -2,7 +2,7 @@ package com.soshified.soshified.modules;
 
 import com.soshified.soshified.presenter.PostPresenter;
 import com.soshified.soshified.presenter.PostPresenterImpl;
-import com.soshified.soshified.view.BasePostView;
+import com.soshified.soshified.view.PostView;
 import com.soshified.soshified.view.activity.NewsViewerActivity;
 
 import dagger.Module;
@@ -16,19 +16,19 @@ import dagger.Provides;
 )
 public class PostModule {
 
-    private BasePostView mBasePostView;
+    private PostView mPostView;
 
-    public PostModule(BasePostView mBasePostView) {
-        this.mBasePostView = mBasePostView;
+    public PostModule(PostView mPostView) {
+        this.mPostView = mPostView;
     }
 
     @Provides
-    public BasePostView provideView() {
-        return mBasePostView;
+    public PostView provideView() {
+        return mPostView;
     }
 
     @Provides
-    public PostPresenter providePresenter(BasePostView mBasePostView) {
-        return new PostPresenterImpl(mBasePostView);
+    public PostPresenter providePresenter(PostView postView) {
+        return new PostPresenterImpl(postView);
     }
 }
