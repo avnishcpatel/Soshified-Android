@@ -1,23 +1,23 @@
 package com.soshified.soshified.modules;
 
-import com.soshified.soshified.SoshifiedApplication;
+import com.soshified.soshified.Soshified;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = SoshifiedApplication.class
+        injects = Soshified.class
 )
 public class SoshifiedModule {
 
-    private SoshifiedApplication application;
+    private Soshified application;
 
-    public SoshifiedModule(SoshifiedApplication application) {
+    public SoshifiedModule(Soshified application) {
         this.application = application;
     }
 
     @Provides
-    public SoshifiedApplication provideApplication() {
+    public Soshified provideApplication() {
         return application;
     }
 

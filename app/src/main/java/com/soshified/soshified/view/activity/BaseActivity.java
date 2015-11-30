@@ -3,7 +3,7 @@ package com.soshified.soshified.view.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.soshified.soshified.SoshifiedApplication;
+import com.soshified.soshified.Soshified;
 import com.soshified.soshified.modules.PostModule;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mObjectGraph = SoshifiedApplication.getApplication(this).buildScopedObjectGraph(getModules().toArray());
+        mObjectGraph = Soshified.getApplication(this).buildScopedObjectGraph(getModules().toArray());
         mObjectGraph.inject(this);
 
         getSupportActionBar();

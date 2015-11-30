@@ -8,7 +8,7 @@ import com.soshified.soshified.modules.SoshifiedModule;
 import dagger.ObjectGraph;
 
 
-public class SoshifiedApplication extends Application {
+public class Soshified extends Application {
 
     private ObjectGraph mObjectGraph;
 
@@ -24,7 +24,7 @@ public class SoshifiedApplication extends Application {
         return mObjectGraph.plus(modules);
     }
 
-    public static SoshifiedApplication getApplication(Context context) {
-        return (SoshifiedApplication) context.getApplicationContext();
+    public static Soshified getApplication(Context context) {
+        return (Soshified) context.getApplicationContext();
     }
 }
