@@ -41,9 +41,6 @@ import butterknife.ButterKnife;
 
 public class ArticleViewerActivity extends BaseActivity implements ArticleView {
 
-    //TODO Fix videos playing after close
-
-
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;
 
