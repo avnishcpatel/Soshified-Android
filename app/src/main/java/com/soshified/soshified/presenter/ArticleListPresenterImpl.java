@@ -19,7 +19,7 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     public static final int ARTICLE_TYPE_STYLE = 1;
     public static final int ARTICLE_TYPE_SUBS = 2;
 
-    private static RestAdapter mRestAdapter;
+    private static ArticleListRequest request;
 
     private int mLastRequestedPage = 1;
 
@@ -48,9 +48,11 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
                 break;
         }
 
-        mRestAdapter = new RestAdapter.Builder()
+        RestAdapter mRestAdapter = new RestAdapter.Builder()
                 .setEndpoint(jsonEndpoint)
                 .build();
+
+        request = mRestAdapter.create(ArticleListRequest.class);
 
         mArticleListView.setupRecyclerView();
         mArticleListView.setupToolBar();
@@ -60,8 +62,7 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     @Override
     public void fetchArticles() {
 
-        GetPagedRequest request = mRestAdapter.create(GetPagedRequest.class);
-        request.newsList(mLastRequestedPage, new Callback<ArticleList>() {
+        request.getPage(mLastRequestedPage, new Callback<ArticleList>() {
             @Override
             public void success(ArticleList articleList, Response response) {
                 mArticleListView.loadArticles(articleList);
@@ -79,8 +80,7 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     @Override
     public void fetchLatestArticles() {
 
-        GetRecentRequest request = mRestAdapter.create(GetRecentRequest.class);
-        request.newsList(new Callback<ArticleList>() {
+        request.getRecent(new Callback<ArticleList>() {
             @Override
             public void success(ArticleList articleList, Response response) {
                 mArticleListView.refreshCompleted(true, articleList);
@@ -96,9 +96,8 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     @Override
     public void fetchNewPage() {
 
-        GetPagedRequest request = mRestAdapter.create(GetPagedRequest.class);
         mLastRequestedPage += 1;
-        request.newsList(mLastRequestedPage, new Callback<ArticleList>() {
+        request.getPage(mLastRequestedPage, new Callback<ArticleList>() {
             @Override
             public void success(ArticleList articleList, Response response) {
                 mArticleListView.addNewPage(true, articleList);
@@ -112,18 +111,15 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     }
 
     /**
-     * GET Request to fetch 'pages' of articles. Should return a page of 25 articles
+     * Interface containing methods to interact with the server
      */
-    private interface GetPagedRequest {
-        @GET("/get_posts?count=25")
-        void newsList(@Query("page") int page, Callback<ArticleList> callback);
-    }
+    private interface ArticleListRequest {
 
-    /**
-     * GET Request to fetch most recent articles. Used when refreshing.
-     */
-    private interface GetRecentRequest {
-        @GET("/get_recent_posts")
-        void newsList(Callback<ArticleList> callback);
+        @GET("/get_posts?count=25")
+        void getPage(@Query("page") int page, Callback<ArticleList> callback);
+
+
+        @GET("/get_posts?count=5")
+        void getRecent(Callback<ArticleList> callback);
     }
 }
