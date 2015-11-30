@@ -1,10 +1,10 @@
-package com.soshified.soshified.util;
+package com.soshified.soshified.ui.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.soshified.soshified.NewsListFragment;
-import com.soshified.soshified.objects.Post;
+import com.soshified.soshified.view.fragment.NewsListFragment;
+import com.soshified.soshified.model.Post;
 
 import java.util.Stack;
 
