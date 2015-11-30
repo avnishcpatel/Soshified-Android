@@ -104,7 +104,7 @@ public class ArticleViewerActivity extends BaseActivity implements ArticleView {
     @Override
     protected void onPause() {
         super.onPause();
-        mWebView.reload();
+        mWebView.onPause();
     }
 
     @Override
