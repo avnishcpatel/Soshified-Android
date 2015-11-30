@@ -105,6 +105,12 @@ public class ArticleViewerActivity extends BaseActivity implements ArticleView {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mWebView.reload();
+    }
+
+    @Override
     protected List<ArticleModule> getModules() {
         return Collections.singletonList(new ArticleModule(this));
     }
