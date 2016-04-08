@@ -5,4 +5,7 @@
     <string name="news_style">Style</string>
     <string name="description_featured_image">Article Featured Image</string>
     <string name="post_subtitle">Posted by %1$s on %2$s</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
