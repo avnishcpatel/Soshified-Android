@@ -1,7 +1,7 @@
-package com.soshified.soshified.presenter;
+package com.soshified.soshified.article;
 
 
-import com.soshified.soshified.model.Article;
+import com.soshified.soshified.data.Article;
 
 public interface ArticlePresenter {
 

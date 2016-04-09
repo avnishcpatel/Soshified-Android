@@ -1,10 +1,9 @@
-package com.soshified.soshified.presenter;
+package com.soshified.soshified.article;
 
-import com.soshified.soshified.model.Article;
+import com.soshified.soshified.data.Article;
 import com.soshified.soshified.util.DateUtils;
 import com.soshified.soshified.util.ParseContent;
 import com.soshified.soshified.util.TextUtils;
-import com.soshified.soshified.view.ArticleView;
 
 /**
  * Presenter Implementation to deal with all the 'presenter' stuff for ArticleView

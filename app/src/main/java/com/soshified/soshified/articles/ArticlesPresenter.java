@@ -1,7 +1,8 @@
-package com.soshified.soshified.presenter;
+package com.soshified.soshified.articles;
 
-import com.soshified.soshified.model.ArticleList;
-import com.soshified.soshified.view.ArticleListView;
+import com.soshified.soshified.data.Article;
+
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -10,10 +11,12 @@ import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Presenter Implementation to deal with all the 'presenter' stuff for ArticleListView
  */
-public class ArticleListPresenterImpl implements ArticleListPresenter {
+public class ArticlesPresenter implements ArticlesContract.Presenter {
 
     public static final int ARTICLE_TYPE_NEWS = 0;
     public static final int ARTICLE_TYPE_STYLE = 1;
@@ -23,10 +26,11 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
 
     private int mLastRequestedPage = 1;
 
-    private ArticleListView mArticleListView;
+    private ArticlesContract.View mArticlesView;
 
-    public ArticleListPresenterImpl(ArticleListView articleListView) {
-        mArticleListView = articleListView;
+    public ArticlesPresenter(ArticlesContract.View articleListView) {
+        mArticlesView = checkNotNull(articleListView);
+        mArticlesView.setPresenter(this);
     }
 
     @Override
@@ -54,20 +58,18 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
 
         request = mRestAdapter.create(ArticleListRequest.class);
 
-        mArticleListView.setupRecyclerView();
-        mArticleListView.setupToolBar();
+        mArticlesView.setupRecyclerView();
+        mArticlesView.setupToolBar();
         fetchArticles();
     }
 
     @Override
     public void fetchArticles() {
 
-        request.getPage(mLastRequestedPage, new Callback<ArticleList>() {
+        request.getPage(mLastRequestedPage, new Callback<Articles>() {
             @Override
-            public void success(ArticleList articleList, Response response) {
-                mArticleListView.loadArticles(articleList);
-
-
+            public void success(Articles articles, Response response) {
+                mArticlesView.showArticles(articles.posts);
             }
 
             @Override
@@ -80,15 +82,15 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     @Override
     public void fetchLatestArticles() {
 
-        request.getRecent(new Callback<ArticleList>() {
+        request.getRecent(new Callback<Articles>() {
             @Override
-            public void success(ArticleList articleList, Response response) {
-                mArticleListView.refreshCompleted(true, articleList);
+            public void success(Articles articles, Response response) {
+                mArticlesView.refreshCompleted(true, articles.posts);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                mArticleListView.refreshCompleted(false, null);
+                mArticlesView.refreshCompleted(false, null);
             }
         });
     }
@@ -97,15 +99,15 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     public void fetchNewPage() {
 
         mLastRequestedPage += 1;
-        request.getPage(mLastRequestedPage, new Callback<ArticleList>() {
+        request.getPage(mLastRequestedPage, new Callback<Articles>() {
             @Override
-            public void success(ArticleList articleList, Response response) {
-                mArticleListView.addNewPage(true, articleList);
+            public void success(Articles articles, Response response) {
+                mArticlesView.addNewPage(true, articles.posts);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                mArticleListView.addNewPage(false, null);
+                mArticlesView.addNewPage(false, null);
             }
         });
     }
@@ -116,10 +118,15 @@ public class ArticleListPresenterImpl implements ArticleListPresenter {
     private interface ArticleListRequest {
 
         @GET("/get_posts?count=25")
-        void getPage(@Query("page") int page, Callback<ArticleList> callback);
+        void getPage(@Query("page") int page, Callback<Articles> callback);
 
 
         @GET("/get_posts?count=5")
-        void getRecent(Callback<ArticleList> callback);
+        void getRecent(Callback<Articles> callback);
+    }
+
+    private class Articles {
+        public ArrayList<Article> posts;
+        public int count_total;
     }
 }

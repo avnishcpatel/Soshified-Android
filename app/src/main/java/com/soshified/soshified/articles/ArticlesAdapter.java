@@ -1,0 +1,158 @@
+package com.soshified.soshified.articles;
+
+import android.content.Context;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.soshified.soshified.R;
+import com.soshified.soshified.data.Article;
+import com.soshified.soshified.util.DateUtils;
+import com.soshified.soshified.util.TextUtils;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * List adapter for the ArticleList. Handles all the layout stuff as well as
+ * the Activity transitions
+ */
+public class ArticlesAdapter extends RecyclerView.Adapter {
+
+    private static final int TYPE_ARTICLE = 0;
+    private static final int TYPE_FOOTER = 1;
+
+    private ArrayList<Article> mArticles = new ArrayList<>(0);
+    private Context mContext;
+    private ArticleClickListener mListener;
+
+    public ArticlesAdapter(Context context, ArticleClickListener listener) {
+        this.mContext = context;
+        this.mListener = listener;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        if (viewType == TYPE_FOOTER) {
+            View footer = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.news_list_progress_item, parent, false);
+            return new ProgressViewHolder(footer);
+        }
+
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.news_list_item, parent, false);
+        return new ArticleViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+
+        if (getItemViewType(position) == TYPE_ARTICLE) {
+
+            final ArticleViewHolder holder = (ArticleViewHolder) viewHolder;
+            final Article article = mArticles.get(position);
+
+            holder.mNewsTitle.setText(Html.fromHtml(article.title));
+
+            holder.mNewsSubtitle.setText(TextUtils.formatStringRes(mContext,
+                    R.string.post_subtitle, new String[]{article.getAuthor(),
+                            DateUtils.parseWordPressFormat(article.date)}));
+
+            Picasso.with(mContext)
+                    .load(TextUtils.validateImageUrl(article.getImageUrl()))
+                    .error(R.color.primary)
+                    .placeholder(R.color.primary_light)
+                    .into(holder.mNewsImage);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Pair<View, String> p1 = Pair.create((View) holder.mNewsImage, "newsImage");
+//                    ActivityOptionsCompat options = ActivityOptionsCompat
+//                            .makeSceneTransitionAnimation(mActivity, p1);
+
+                    mListener.onClick(article, p1);
+                }
+            });
+        } else if (getItemViewType(position) == TYPE_FOOTER) {
+            ProgressViewHolder holder = (ProgressViewHolder) viewHolder;
+            if (position > 0) {
+                holder.mLoadingView.setVisibility(View.VISIBLE);
+            } else {
+                holder.mLoadingView.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    public void addPage(ArrayList<Article> articles) {
+        checkNotNull(articles);
+        int currentCount = mArticles.size();
+
+        if (mArticles.size() == 0)
+            mArticles = articles;
+        else
+            mArticles.addAll(articles);
+        notifyItemRangeInserted(currentCount + 1, articles.size());
+    }
+
+    public void addItemToStart(Article article) {
+        mArticles.add(0, article);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == getItemCount() - 1) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_ARTICLE;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mArticles.size() + 1;
+    }
+
+    public class ArticleViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.news_list_item_title) TextView mNewsTitle;
+        @Bind(R.id.news_list_item_subtitle) TextView mNewsSubtitle;
+        @Bind(R.id.news_list_item_image) ImageView mNewsImage;
+
+        View itemView;
+
+        public ArticleViewHolder(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public class ProgressViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.footer_loading_view)
+        ProgressBar mLoadingView;
+
+        View itemView;
+
+        public ProgressViewHolder(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public interface ArticleClickListener {
+        void onClick(Article article, Pair<View, String> transitionPair);
+    }
+
+}

@@ -1,4 +1,4 @@
-package com.soshified.soshified.view.activity;
+package com.soshified.soshified.article;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.MenuItem;
@@ -22,29 +23,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.model.Article;
-import com.soshified.soshified.modules.ArticleModule;
-import com.soshified.soshified.presenter.ArticlePresenter;
+import com.soshified.soshified.data.Article;
 import com.soshified.soshified.util.AnimUtils;
 import com.soshified.soshified.util.TextUtils;
-import com.soshified.soshified.view.ArticleView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ArticleViewerActivity extends BaseActivity implements ArticleView {
+public class ArticleViewerActivity extends AppCompatActivity implements ArticleView {
 
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;
 
-    @Inject
     ArticlePresenter articlePresenter;
 
     @Bind(R.id.news_view_toolbar)  Toolbar mToolbar;
@@ -105,11 +100,6 @@ public class ArticleViewerActivity extends BaseActivity implements ArticleView {
     protected void onPause() {
         super.onPause();
         mWebView.onPause();
-    }
-
-    @Override
-    protected List<ArticleModule> getModules() {
-        return Collections.singletonList(new ArticleModule(this));
     }
 
     /**

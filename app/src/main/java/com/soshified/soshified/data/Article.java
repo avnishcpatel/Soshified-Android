@@ -1,4 +1,4 @@
-package com.soshified.soshified.model;
+package com.soshified.soshified.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

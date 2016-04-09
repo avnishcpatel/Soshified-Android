@@ -8,22 +8,10 @@
     android:clipToPadding="false"
     android:fitsSystemWindows="true">
 
-    <FrameLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ProgressBar
-            android:id="@+id/main_progress"
-            android:layout_gravity="center"
-            android:layout_margin="30dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:visibility="visible" />
-
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/main_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -49,16 +37,14 @@
             android:fitsSystemWindows="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        </android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
-    </FrameLayout>
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/main_navigation_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:headerLayout="@layout/navigation_header"
-            app:menu="@menu/menu_navigation"/>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/main_navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/navigation_header"
+        app:menu="@menu/menu_navigation"/>
 
 </android.support.v4.widget.DrawerLayout>

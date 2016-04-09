@@ -1,4 +1,4 @@
-package com.soshified.soshified.view;
+package com.soshified.soshified.article;
 
 /**
  * View component for the viewing an Article
