@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.data.source.ArticlesDataSource;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.LocalArticlesDataSource;
 import com.soshified.soshified.data.source.RemoteArticlesDataSource;

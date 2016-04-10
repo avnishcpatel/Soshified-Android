@@ -55,7 +55,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
         mArticlesRepository.getRecent(new ArticlesDataSource.PageLoadCallback() {
             @Override
             public void onPageLoaded(ArrayList<Article> articles) {
-                mArticlesView.addNewPage(articles);
+                mArticlesView.refreshCompleted(articles);
             }
 
             @Override

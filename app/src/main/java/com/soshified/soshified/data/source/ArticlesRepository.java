@@ -2,8 +2,6 @@ package com.soshified.soshified.data.source;
 
 import android.support.annotation.NonNull;
 
-import com.soshified.soshified.data.Article;
-
 /**
  * Implementation that loads articles from either Soshified Servers or a local database.
  * Loads Articles into a cache which is updated dynamically.
