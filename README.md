@@ -1,2 +1,2 @@
 # Soshified-Android
-New updated/rebuilt version of the SSF Android app
+Currently in development new and improved version of the Soshified Android App since the old one would have been a nightmare to refactor.
