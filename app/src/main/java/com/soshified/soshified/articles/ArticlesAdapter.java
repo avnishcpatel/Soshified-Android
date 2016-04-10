@@ -74,15 +74,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
                     .placeholder(R.color.primary_light)
                     .into(holder.mNewsImage);
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Pair<View, String> p1 = Pair.create((View) holder.mNewsImage, "newsImage");
+            holder.itemView.setOnClickListener(v -> {
+                Pair<View, String> p1 = Pair.create((View) holder.mNewsImage, "newsImage");
 //                    ActivityOptionsCompat options = ActivityOptionsCompat
 //                            .makeSceneTransitionAnimation(mActivity, p1);
 
-                    mListener.onClick(article, p1);
-                }
+                mListener.onClick(article, p1);
             });
         } else if (getItemViewType(position) == TYPE_FOOTER) {
             ProgressViewHolder holder = (ProgressViewHolder) viewHolder;

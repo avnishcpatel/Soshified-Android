@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
@@ -13,6 +14,7 @@ android {
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -20,6 +22,10 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -33,9 +39,10 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:palette-v7:23.3.0'
+
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'org.jsoup:jsoup:1.8.3'
+
+    compile 'com.annimon:stream:1.0.1'
 }

@@ -162,29 +162,26 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleV
 
     @Override
     public void initToolbar() {
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
 
-                //Hides/Shows toolbar title depending on scroll amount
-                float percentage = (float) Math.abs(verticalOffset) /
-                        (float) appBarLayout.getTotalScrollRange();
+            //Hides/Shows toolbar title depending on scroll amount
+            float percentage = (float) Math.abs(verticalOffset) /
+                    (float) appBarLayout.getTotalScrollRange();
 
-                mBlurredBackdrop.setAlpha(percentage);
-                if (percentage >= 0.9f){
+            mBlurredBackdrop.setAlpha(percentage);
+            if (percentage >= 0.9f){
 
-                    if(!mIsTitleVisible) {
-                        AnimUtils.startAlphaAnimation(mToolbarTitle, 200, View.VISIBLE);
-                        mIsTitleVisible = true;
-                    }
-                } else {
-                    if(mIsTitleVisible) {
-                        AnimUtils.startAlphaAnimation(mToolbarTitle, 200, View.INVISIBLE);
-                        mIsTitleVisible = false;
-                    }
+                if(!mIsTitleVisible) {
+                    AnimUtils.startAlphaAnimation(mToolbarTitle, 200, View.VISIBLE);
+                    mIsTitleVisible = true;
                 }
-
+            } else {
+                if(mIsTitleVisible) {
+                    AnimUtils.startAlphaAnimation(mToolbarTitle, 200, View.INVISIBLE);
+                    mIsTitleVisible = false;
+                }
             }
+
         });
 
         setSupportActionBar(mToolbar);

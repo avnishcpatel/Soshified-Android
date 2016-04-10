@@ -29,12 +29,7 @@ public class ArticlePresenterImpl implements ArticlePresenter {
 
     @Override
     public void parsePost(String postContent) {
-        new ParseContent(new ParseContent.OnParseCompleteListener() {
-            @Override
-            public void onParsed(String mParsedPostContent) {
-                mView.loadPostContent(mParsedPostContent);
-            }
-        }).execute(postContent);
+        new ParseContent(mParsedPostContent -> mView.loadPostContent(mParsedPostContent)).execute(postContent);
     }
 
     @Override

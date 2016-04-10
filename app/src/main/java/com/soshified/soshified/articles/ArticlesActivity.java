@@ -66,16 +66,13 @@ public class ArticlesActivity extends AppCompatActivity {
     }
 
     private void setupDrawer() {
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                switch (item.getItemId()) {
-                    //TODO Do stuff
-                }
-                item.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                return false;
+        mNavigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                //TODO Do stuff
             }
+            item.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            return false;
         });
     }
 

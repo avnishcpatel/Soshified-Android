@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.annimon.stream.Stream;
 import com.soshified.soshified.R;
 import com.soshified.soshified.data.Article;
 
@@ -56,11 +57,8 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new ArticlesAdapter(getContext(), new ArticlesAdapter.ArticleClickListener() {
-            @Override
-            public void onClick(Article article, Pair<View, String> transitionPair) {
-                //TODO Open Article
-            }
+        mAdapter = new ArticlesAdapter(getContext(), (article, transitionPair) -> {
+            //TODO Open Article
         });
     }
 
@@ -117,12 +115,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
         mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.primary));
 
         //Setup refresh listener
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPresenter.fetchLatestArticles();
-            }
-        });
+        mRefreshLayout.setOnRefreshListener(() -> mPresenter.fetchLatestArticles());
     }
 
     @Override
@@ -130,12 +123,10 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
         int topPostId = articles.get(0).id;
         Collections.reverse(articles);
 
-        for(Article article : articles){
-            if(article.id != topPostId){
-                mAdapter.addItemToStart(article);
-                mAdapter.notifyItemInserted(0);
-            }
-        }
+        Stream.of(articles).filter(article -> article.id != topPostId).forEach((Article article) -> {
+            mAdapter.addItemToStart(article);
+            mAdapter.notifyItemInserted(0);
+        });
         mRefreshLayout.setRefreshing(false);
     }
 
