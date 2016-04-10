@@ -68,6 +68,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.articles_fragment, group, false);
         ButterKnife.bind(this, view);
+
         mArticlesList.setAdapter(mAdapter);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(
@@ -85,14 +86,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     }
 
     @Override
-    public void showArticles(ArrayList<Article> articles) {
-        mAdapter.addPage(articles);
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
     public void setupRecyclerView() {
-
         mLayoutManager = new LinearLayoutManager(getContext());
         mArticlesList.setItemAnimator(new DefaultItemAnimator());
         mArticlesList.setLayoutManager(mLayoutManager);
@@ -119,7 +113,6 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
 
     @Override
     public void setupToolBar() {
-
         //Set refresh icon colour
         mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.primary));
 
@@ -133,34 +126,29 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     }
 
     @Override
-    public void refreshCompleted(boolean success, ArrayList<Article> articles) {
+    public void refreshCompleted(ArrayList<Article> articles) {
+        int topPostId = articles.get(0).id;
+        Collections.reverse(articles);
 
-        if(success){
-            int topPostId = articles.get(0).id;
-            Collections.reverse(articles);
-
-            for(Article article : articles){
-                if(article.id != topPostId){
-                    mAdapter.addItemToStart(article);
-                    mAdapter.notifyItemInserted(0);
-                }
+        for(Article article : articles){
+            if(article.id != topPostId){
+                mAdapter.addItemToStart(article);
+                mAdapter.notifyItemInserted(0);
             }
-            mRefreshLayout.setRefreshing(false);
-
-        } else {
-            //TODO Notify user of failure
-            mRefreshLayout.setRefreshing(false);
         }
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void addNewPage(boolean success, ArrayList<Article> articles) {
+    public void addNewPage(ArrayList<Article> articles) {
+        checkNotNull(articles);
 
-        if(success){
-            mLoadingItems = false;
-            mAdapter.addPage(articles);
-            //TODO Hide loading
-        }
+        mAdapter.addPage(articles);
+        mLoadingItems = false;
+
+        // Hides initial loading indicator
+        if (mProgressBar.getVisibility() == View.VISIBLE)
+            mProgressBar.setVisibility(View.GONE);
     }
 
     @Override

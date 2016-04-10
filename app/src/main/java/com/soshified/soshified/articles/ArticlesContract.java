@@ -27,15 +27,13 @@ public class ArticlesContract {
 
         void setPresenter(@NonNull Presenter presenter);
 
-        void showArticles(ArrayList<Article> articles);
-
         void setupRecyclerView();
 
         void setupToolBar();
 
-        void refreshCompleted(boolean success, ArrayList<Article> articles);
+        void refreshCompleted(ArrayList<Article> articles);
 
-        void addNewPage(boolean success, ArrayList<Article> articles);
+        void addNewPage(ArrayList<Article> articles);
 
     }
 

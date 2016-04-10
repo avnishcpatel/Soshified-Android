@@ -9,6 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.soshified.soshified.R;
+import com.soshified.soshified.data.source.ArticlesDataSource;
+import com.soshified.soshified.data.source.ArticlesRepository;
+import com.soshified.soshified.data.source.LocalArticlesDataSource;
+import com.soshified.soshified.data.source.RemoteArticlesDataSource;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,6 +22,8 @@ public class ArticlesActivity extends AppCompatActivity {
     @Bind(R.id.main_navigation_drawer)  DrawerLayout mDrawerLayout;
     @Bind(R.id.main_navigation_view) NavigationView mNavigationView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
+
+    private int mCurrentType = ArticlesPresenter.ARTICLE_TYPE_NEWS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,11 @@ public class ArticlesActivity extends AppCompatActivity {
                     .commit();
         }
 
-        new ArticlesPresenter(articlesFragment);
+        ArticlesRepository articlesRepository =
+                ArticlesRepository.getInstance(RemoteArticlesDataSource.getInstance(mCurrentType),
+                        LocalArticlesDataSource.getInstance(mCurrentType));
+
+        new ArticlesPresenter(articlesRepository, articlesFragment);
     }
 
     private void setupDrawer() {
@@ -70,26 +80,4 @@ public class ArticlesActivity extends AppCompatActivity {
         });
     }
 
-//TODO Menu items
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        switch (id) {
-//            case R.id.action_settings:
-//                return true;
-//            case android.R.id.home:
-//                toggleDrawer();
-//                return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

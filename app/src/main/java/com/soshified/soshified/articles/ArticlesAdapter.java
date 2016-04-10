@@ -44,7 +44,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         if (viewType == TYPE_FOOTER) {
             View footer = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.news_list_progress_item, parent, false);
@@ -58,7 +57,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-
         if (getItemViewType(position) == TYPE_ARTICLE) {
 
             final ArticleViewHolder holder = (ArticleViewHolder) viewHolder;
