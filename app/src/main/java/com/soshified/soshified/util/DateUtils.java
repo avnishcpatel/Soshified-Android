@@ -12,15 +12,26 @@ public class DateUtils {
 
     public DateUtils() {}
 
-    public static String parseWordPressFormat(String mDate) {
+    public static String parseWordPressFormat(String date) {
         SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         SimpleDateFormat toFormat = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
         try {
-            Date date = fromFormat.parse(mDate);
-            return toFormat.format(date);
+            Date parsedDate = fromFormat.parse(date);
+            return toFormat.format(parsedDate);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static long getUnixTimeStamp(String date) {
+        SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        try {
+            Date parsedDate = fromFormat.parse(date);
+            return parsedDate.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 }

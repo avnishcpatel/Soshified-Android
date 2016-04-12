@@ -1,10 +1,11 @@
 package com.soshified.soshified.data.source;
 
-import android.support.annotation.NonNull;
-
 import com.soshified.soshified.data.Article;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import rx.Observable;
 
 /**
  * Implementation of ArticlesDataSource that retrieves articles from the a local DB.
@@ -26,12 +27,13 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
     }
 
     @Override
-    public void getPage(int page, @NonNull final PageLoadCallback callback) {
+    public Observable<List<Article>> getPageObservable(int page) {
+        return null;
     }
 
     @Override
-    public void getRecent(@NonNull final PageLoadCallback callback) {
-
+    public Observable<List<Article>> getRecentObservable() {
+        return null;
     }
 
     private class Articles {

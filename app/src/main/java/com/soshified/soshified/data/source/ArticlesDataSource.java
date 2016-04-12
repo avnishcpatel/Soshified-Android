@@ -1,25 +1,20 @@
 package com.soshified.soshified.data.source;
 
-import android.support.annotation.NonNull;
-
 import com.soshified.soshified.data.Article;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import rx.Observable;
 
 /**
  * Interface for retrieving tasks
  */
 public interface ArticlesDataSource {
 
-    void getPage(int page, @NonNull PageLoadCallback callback);
+    Observable<List<Article>> getPageObservable(int page);
 
-    void getRecent(@NonNull PageLoadCallback callback);
 
-    interface PageLoadCallback {
+    Observable<List<Article>> getRecentObservable();
 
-        void onPageLoaded(ArrayList<Article> articles);
 
-        void onError();
-
-    }
 }

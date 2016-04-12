@@ -2,6 +2,13 @@ package com.soshified.soshified.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.soshified.soshified.data.Article;
+
+import java.util.HashMap;
+import java.util.List;
+
+import rx.Observable;
+
 /**
  * Implementation that loads articles from either Soshified Servers or a local database.
  * Loads Articles into a cache which is updated dynamically.
@@ -10,16 +17,19 @@ public class ArticlesRepository implements ArticlesDataSource {
 
     private static ArticlesRepository INSTANCE;
 
-    ArticlesDataSource mRemoteDataSource;
-    ArticlesDataSource mLocalDataSource;
+    private ArticlesDataSource mRemoteDataSource;
+    private ArticlesDataSource mLocalDataSource;
 
-    private ArticlesRepository(@NonNull ArticlesDataSource remoteDataSource,
+    private HashMap<Integer, Article> mCachedArticles;
+
+    private ArticlesRepository(@NonNull RemoteArticlesDataSource remoteDataSource,
                               @NonNull ArticlesDataSource localDataSource) {
         this.mLocalDataSource = localDataSource;
         this.mRemoteDataSource = remoteDataSource;
+        this.mCachedArticles = new HashMap<>();
     }
 
-    public static ArticlesRepository getInstance(@NonNull ArticlesDataSource remoteDataSource,
+    public static ArticlesRepository getInstance(@NonNull RemoteArticlesDataSource remoteDataSource,
                                                  @NonNull ArticlesDataSource localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new ArticlesRepository(remoteDataSource, localDataSource);
@@ -27,12 +37,19 @@ public class ArticlesRepository implements ArticlesDataSource {
     }
 
     @Override
-    public void getPage(int page, @NonNull PageLoadCallback callback) {
-        mRemoteDataSource.getPage(page, callback);
+    public Observable<List<Article>> getPageObservable(int page) {
+        Observable<List<Article>> remoteArticles = mRemoteDataSource.getPageObservable(page);
+
+        Observable<List<Article>> remoteArticlesWithLocalUpdate = remoteArticles
+                .flatMap(Observable::from)
+                .doOnNext(article -> mCachedArticles.put(article.id, article))
+                .toList();
+
+        return remoteArticlesWithLocalUpdate;
     }
 
     @Override
-    public void getRecent(@NonNull PageLoadCallback callback) {
-
+    public Observable<List<Article>> getRecentObservable() {
+        return mRemoteDataSource.getRecentObservable();
     }
 }

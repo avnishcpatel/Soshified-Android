@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.soshified.soshified.data.Article;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Contract between view and presenter
@@ -14,8 +14,6 @@ public class ArticlesContract {
     public interface Presenter {
 
         void init(int type);
-
-        void fetchArticles();
 
         void fetchLatestArticles();
 
@@ -31,9 +29,13 @@ public class ArticlesContract {
 
         void setupToolBar();
 
-        void refreshCompleted(ArrayList<Article> articles);
+        void addNewArticle(Article article);
 
-        void addNewPage(ArrayList<Article> articles);
+        Article getRecentArticle();
+
+        void hideRefreshing();
+
+        void addNewPage(List<Article> articles);
 
     }
 

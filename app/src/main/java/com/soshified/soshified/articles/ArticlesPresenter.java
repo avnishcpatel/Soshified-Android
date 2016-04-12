@@ -1,10 +1,11 @@
 package com.soshified.soshified.articles;
 
-import com.soshified.soshified.data.Article;
-import com.soshified.soshified.data.source.ArticlesDataSource;
 import com.soshified.soshified.data.source.ArticlesRepository;
+import com.soshified.soshified.util.DateUtils;
 
-import java.util.ArrayList;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,7 +18,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     public static final int ARTICLE_TYPE_STYLE = 1;
     public static final int ARTICLE_TYPE_SUBS = 2;
 
-    private int mLastRequestedPage = 1;
+    private int mLastRequestedPage;
 
     private final ArticlesContract.View mArticlesView;
     private final ArticlesRepository mArticlesRepository;
@@ -32,53 +33,31 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     public void init(int type) {
         mArticlesView.setupRecyclerView();
         mArticlesView.setupToolBar();
-        fetchArticles();
-    }
-
-    @Override
-    public void fetchArticles() {
-        mArticlesRepository.getPage(mLastRequestedPage, new ArticlesDataSource.PageLoadCallback() {
-            @Override
-            public void onPageLoaded(ArrayList<Article> articles) {
-                mArticlesView.addNewPage(articles);
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+        fetchNewPage();
     }
 
     @Override
     public void fetchLatestArticles() {
-        mArticlesRepository.getRecent(new ArticlesDataSource.PageLoadCallback() {
-            @Override
-            public void onPageLoaded(ArrayList<Article> articles) {
-                mArticlesView.refreshCompleted(articles);
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+        long mostRecentDate = DateUtils.getUnixTimeStamp(mArticlesView.getRecentArticle().getDate());
+        mArticlesRepository.getRecentObservable()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(Observable::from)
+                .filter(article -> {
+                    long articleDate = DateUtils.getUnixTimeStamp(article.getDate());
+                    return articleDate > mostRecentDate;
+                })
+                .finallyDo(mArticlesView::hideRefreshing)
+                .subscribe(mArticlesView::addNewArticle);
     }
 
     @Override
     public void fetchNewPage() {
         mLastRequestedPage += 1;
 
-        mArticlesRepository.getPage(mLastRequestedPage, new ArticlesDataSource.PageLoadCallback() {
-            @Override
-            public void onPageLoaded(ArrayList<Article> articles) {
-                mArticlesView.addNewPage(articles);
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+        mArticlesRepository.getPageObservable(mLastRequestedPage)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mArticlesView::addNewPage);
     }
 }

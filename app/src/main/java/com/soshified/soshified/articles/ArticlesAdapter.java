@@ -18,6 +18,7 @@ import com.soshified.soshified.util.TextUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,7 +34,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
     private static final int TYPE_ARTICLE = 0;
     private static final int TYPE_FOOTER = 1;
 
-    private ArrayList<Article> mArticles = new ArrayList<>(0);
+    private List<Article> mArticles = new ArrayList<>(0);
     private Context mContext;
     private ArticleClickListener mListener;
 
@@ -91,7 +92,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void addPage(ArrayList<Article> articles) {
+    public void addPage(List<Article> articles) {
         checkNotNull(articles);
         int currentCount = mArticles.size();
 
@@ -104,6 +105,10 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
 
     public void addItemToStart(Article article) {
         mArticles.add(0, article);
+    }
+
+    public Article getArticle(int position) {
+        return mArticles.get(position);
     }
 
     @Override

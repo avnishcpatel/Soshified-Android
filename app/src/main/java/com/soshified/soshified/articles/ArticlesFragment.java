@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,8 +20,8 @@ import com.annimon.stream.Stream;
 import com.soshified.soshified.R;
 import com.soshified.soshified.data.Article;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -119,19 +118,23 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     }
 
     @Override
-    public void refreshCompleted(ArrayList<Article> articles) {
-        int topPostId = articles.get(0).id;
-        Collections.reverse(articles);
+    public void addNewArticle(Article article) {
+        mAdapter.addItemToStart(article);
+        mAdapter.notifyItemInserted(0);
+    }
 
-        Stream.of(articles).filter(article -> article.id != topPostId).forEach((Article article) -> {
-            mAdapter.addItemToStart(article);
-            mAdapter.notifyItemInserted(0);
-        });
+    @Override
+    public Article getRecentArticle() {
+        return mAdapter.getArticle(0);
+    }
+
+    @Override
+    public void hideRefreshing() {
         mRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void addNewPage(ArrayList<Article> articles) {
+    public void addNewPage(List<Article> articles) {
         checkNotNull(articles);
 
         mAdapter.addPage(articles);

@@ -1,18 +1,14 @@
 package com.soshified.soshified.data.source;
 
-import android.support.annotation.NonNull;
-
 import com.soshified.soshified.articles.ArticlesPresenter;
 import com.soshified.soshified.data.Article;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * Implementation of ArticlesDataSource that retrieves articles from the servers.
@@ -55,37 +51,16 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
     }
 
     @Override
-    public void getPage(int page, @NonNull final PageLoadCallback callback) {
-        request.getPage(page, new Callback<Articles>() {
-            @Override
-            public void success(Articles articles, Response response) {
-                callback.onPageLoaded(articles.posts);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                error.printStackTrace();
-                callback.onError();
-            }
-        });
+    public Observable<List<Article>> getPageObservable(int page) {
+        return request.getPage(page)
+                .flatMap(articles -> Observable.from(articles.posts)).toList();
     }
 
     @Override
-    public void getRecent(@NonNull final PageLoadCallback callback) {
-
-        request.getRecent(new Callback<Articles>() {
-            @Override
-            public void success(Articles articles, Response response) {
-                callback.onPageLoaded(articles.posts);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.onError();
-            }
-        });
+    public Observable<List<Article>> getRecentObservable() {
+        return request.getRecent()
+                .flatMap(articles -> Observable.from(articles.posts)).toList();
     }
-
 
     /**
      * Interface containing methods to interact with the server
@@ -93,14 +68,14 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
     private interface ArticlesRequest {
 
         @GET("/get_posts?count=25")
-        void getPage(@Query("page") int page, Callback<Articles> callback);
-
+        Observable<Articles> getPage(@Query("page") int page);
 
         @GET("/get_posts?count=5")
-        void getRecent(Callback<Articles> callback);
+        Observable<Articles> getRecent();
+
+        class Articles {
+            public List<Article> posts;
+        }
     }
 
-    private class Articles {
-        public ArrayList<Article> posts;
-    }
 }
