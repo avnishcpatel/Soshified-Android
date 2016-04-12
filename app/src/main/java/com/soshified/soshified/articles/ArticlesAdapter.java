@@ -63,14 +63,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
             final ArticleViewHolder holder = (ArticleViewHolder) viewHolder;
             final Article article = mArticles.get(position);
 
-            holder.mNewsTitle.setText(Html.fromHtml(article.title));
+            holder.mNewsTitle.setText(Html.fromHtml(article.getTitle()));
 
             holder.mNewsSubtitle.setText(TextUtils.formatStringRes(mContext,
-                    R.string.post_subtitle, new String[]{article.getAuthor(),
-                            DateUtils.parseWordPressFormat(article.date)}));
+                    R.string.post_subtitle, new String[]{article.getAuthorName(),
+                            DateUtils.parseWordPressFormat(article.getDate())}));
 
             Picasso.with(mContext)
-                    .load(TextUtils.validateImageUrl(article.getImageUrl()))
+                    .load(TextUtils.validateImageUrl(article.getThumbnail()))
                     .error(R.color.primary)
                     .placeholder(R.color.primary_light)
                     .into(holder.mNewsImage);

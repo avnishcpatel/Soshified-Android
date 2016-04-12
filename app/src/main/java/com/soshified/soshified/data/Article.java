@@ -3,43 +3,56 @@ package com.soshified.soshified.data;
 /**
  * Object representation of a single article (Wordpress Post)
  */
-public class Article{
+public class Article {
 
-    public String title, date, content, mThumbnail, mAuthor;
-    public Images thumbnail_images;
-    public Author author;
-    public int id;
+    private String title, date, content, thumbnail, authorName;
+    private int id;
 
-    public int getId() {
-        return id;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDate() {
         return date;
     }
 
-    public String getImageUrl(){
-        if (thumbnail_images != null)
-            return thumbnail_images.large.url;
-        else
-            return null;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getAuthor() {
-        return author.name;
+    public String getContent() {
+        return content;
     }
 
-    class Author {
-        String name;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    class Images {
-
-        Size large;
-
-        class Size {
-            String url;
-        }
+    public String getThumbnail() {
+        return thumbnail;
     }
 
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

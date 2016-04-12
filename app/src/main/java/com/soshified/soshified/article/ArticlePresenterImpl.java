@@ -20,11 +20,11 @@ public class ArticlePresenterImpl implements ArticlePresenter {
     @Override
     public void init(Article article) {
         this.mArticle = article;
-        parsePost(mArticle.content);
+        parsePost(mArticle.getContent());
         parseMeta();
 
         mView.initToolbar();
-        mView.loadHeaderImage(mArticle.mThumbnail);
+        mView.loadHeaderImage(mArticle.getThumbnail());
     }
 
     @Override
@@ -34,8 +34,8 @@ public class ArticlePresenterImpl implements ArticlePresenter {
 
     @Override
     public void parseMeta() {
-        String mTitle = TextUtils.fromHtml(mArticle.title);
-        String mDate = DateUtils.parseWordPressFormat(mArticle.date);
-        mView.loadPostMeta(mTitle, mArticle.mAuthor, mDate);
+        String mTitle = TextUtils.fromHtml(mArticle.getTitle());
+        String mDate = DateUtils.parseWordPressFormat(mArticle.getDate());
+        mView.loadPostMeta(mTitle, mArticle.getAuthorName(), mDate);
     }
 }
