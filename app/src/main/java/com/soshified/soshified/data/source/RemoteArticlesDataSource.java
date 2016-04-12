@@ -56,12 +56,6 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
                 .flatMap(articles -> Observable.from(articles.posts)).toList();
     }
 
-    @Override
-    public Observable<List<Article>> getRecentObservable() {
-        return request.getRecent()
-                .flatMap(articles -> Observable.from(articles.posts)).toList();
-    }
-
     /**
      * Interface containing methods to interact with the server
      */
@@ -69,9 +63,6 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
 
         @GET("/get_posts?count=25")
         Observable<Articles> getPage(@Query("page") int page);
-
-        @GET("/get_posts?count=5")
-        Observable<Articles> getRecent();
 
         class Articles {
             public List<Article> posts;

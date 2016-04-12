@@ -39,10 +39,11 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     @Override
     public void fetchLatestArticles() {
         long mostRecentDate = DateUtils.getUnixTimeStamp(mArticlesView.getRecentArticle().getDate());
-        mArticlesRepository.getRecentObservable()
+        mArticlesRepository.getPageObservable(1)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
+                .take(10)
                 .filter(article -> {
                     long articleDate = DateUtils.getUnixTimeStamp(article.getDate());
                     return articleDate > mostRecentDate;

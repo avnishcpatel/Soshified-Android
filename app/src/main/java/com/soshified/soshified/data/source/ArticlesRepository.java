@@ -47,9 +47,4 @@ public class ArticlesRepository implements ArticlesDataSource {
 
         return remoteArticlesWithLocalUpdate;
     }
-
-    @Override
-    public Observable<List<Article>> getRecentObservable() {
-        return mRemoteDataSource.getRecentObservable();
-    }
 }

@@ -14,7 +14,5 @@ public interface ArticlesDataSource {
     Observable<List<Article>> getPageObservable(int page);
 
 
-    Observable<List<Article>> getRecentObservable();
-
 
 }

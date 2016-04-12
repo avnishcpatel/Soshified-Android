@@ -31,11 +31,6 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
         return null;
     }
 
-    @Override
-    public Observable<List<Article>> getRecentObservable() {
-        return null;
-    }
-
     private class Articles {
         public ArrayList<Article> posts;
     }
