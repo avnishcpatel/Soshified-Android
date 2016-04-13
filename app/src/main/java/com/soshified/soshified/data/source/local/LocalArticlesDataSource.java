@@ -33,11 +33,12 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
 
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
-        //TODO Improve this
-        RealmResults<RealmArticle> realmArticles = Realm.getDefaultInstance().where(RealmArticle.class).findAll();
-        return Observable.from(realmArticles)
-                .filter(RealmObject::isLoaded)
-                .flatMap(realmArticle -> Observable.from(realmArticles))
+        return Realm.getDefaultInstance().where(RealmArticle.class).findAllAsync().asObservable()
+                .filter(RealmResults::isLoaded)
+                .flatMap(Observable::from)
+                .buffer(25)
+                .elementAt(page - 1)
+                .flatMap(Observable::from)
                 .map(realmArticle -> new Article().copyArticle(realmArticle))
                 .toList();
     }
