@@ -1,5 +1,7 @@
 package com.soshified.soshified.data;
 
+import com.soshified.soshified.data.source.local.RealmArticle;
+
 /**
  * Object representation of a single article (Wordpress Post)
  */
@@ -7,6 +9,16 @@ public class Article {
 
     private String title, date, content, thumbnail, authorName;
     private int id;
+
+    public Article copyArticle(RealmArticle article) {
+        id = article.getId();
+        title = article.getTitle();
+        date = article.getDate();
+        content = article.getContent();
+        thumbnail = article.getThumbnail();
+        authorName = article.getAuthorName();
+        return this;
+    }
 
     public String getTitle() {
         return title;

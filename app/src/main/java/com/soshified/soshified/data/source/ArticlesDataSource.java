@@ -13,6 +13,6 @@ public interface ArticlesDataSource {
 
     Observable<List<Article>> getPageObservable(int page);
 
-
+    void saveArticle(Article article);
 
 }

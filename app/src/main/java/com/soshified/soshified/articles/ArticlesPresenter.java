@@ -57,8 +57,6 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
         mLastRequestedPage += 1;
 
         mArticlesRepository.getPageObservable(mLastRequestedPage)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mArticlesView::addNewPage);
     }
 }

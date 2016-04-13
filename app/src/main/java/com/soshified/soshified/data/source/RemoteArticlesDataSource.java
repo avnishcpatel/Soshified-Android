@@ -1,11 +1,14 @@
 package com.soshified.soshified.data.source;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.soshified.soshified.articles.ArticlesPresenter;
 import com.soshified.soshified.data.Article;
 
 import java.util.List;
 
 import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
 import retrofit.http.Query;
 import rx.Observable;
@@ -36,8 +39,13 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
                 break;
         }
 
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Article.class, new ArticleDeserializer())
+                .create();
+
         RestAdapter mRestAdapter = new RestAdapter.Builder()
                 .setEndpoint(jsonEndpoint)
+                .setConverter(new GsonConverter(gson))
                 .build();
 
         request = mRestAdapter.create(ArticlesRequest.class);
@@ -53,11 +61,21 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
         return request.getPage(page)
-                .flatMap(articles -> Observable.from(articles.posts)).toList();
+                .flatMap(articles -> Observable.from(articles.posts))
+                .toList();
     }
 
     /**
-     * Interface containing methods to interact with the server
+     * Not used since we don't save articles to the server.
+     * @param article Not Used.
+     */
+    @Override
+    public void saveArticle(Article article) {
+
+    }
+
+    /**
+     * Interface containing methods to interact with the server.
      */
     private interface ArticlesRequest {
 
