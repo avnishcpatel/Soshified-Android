@@ -1,5 +1,7 @@
 package com.soshified.soshified.data.source.local;
 
+import android.util.Log;
+
 import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesDataSource;
 
@@ -26,8 +28,6 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
     public static LocalArticlesDataSource getInstance(int type) {
         if (INSTANCE == null)
             INSTANCE = new LocalArticlesDataSource(type);
-
-
         return INSTANCE;
     }
 
@@ -46,8 +46,8 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
     @Override
     public void saveArticle(Article article) {
         Realm.getDefaultInstance().executeTransaction(realm -> {
-            RealmArticle realmArticle = realm.createObject(RealmArticle.class);
-            realmArticle.copyArticle(article);
+            RealmArticle realmArticle = new RealmArticle().copyArticle(article);
+            realm.copyToRealmOrUpdate(realmArticle);
         });
     }
 }

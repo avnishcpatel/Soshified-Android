@@ -3,6 +3,7 @@ package com.soshified.soshified.data.source.local;
 import com.soshified.soshified.data.Article;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Realm version of the the Article object, because of thread confinement
@@ -10,15 +11,16 @@ import io.realm.RealmObject;
 public class RealmArticle extends RealmObject{
 
     private String title, date, content, thumbnail, authorName;
-    private int id;
+    @PrimaryKey private int id;
 
-    public void copyArticle(Article article) {
+    public RealmArticle copyArticle(Article article) {
         id = article.getId();
         title = article.getTitle();
         date = article.getDate();
         content = article.getContent();
         thumbnail = article.getThumbnail();
         authorName = article.getAuthorName();
+        return this;
     }
 
     public int getId() {
