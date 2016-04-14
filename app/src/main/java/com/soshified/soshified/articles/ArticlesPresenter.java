@@ -53,7 +53,6 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     public void fetchLatestArticles() {
         long mostRecentDate = DateUtils.getUnixTimeStamp(mArticlesView.getRecentArticle().getDate());
         mArticlesRepository.getPageObservable(1)
-                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
                 .take(10)
