@@ -4,8 +4,10 @@ import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.util.DateUtils;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,6 +21,8 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     public static final int ARTICLE_TYPE_SUBS = 2;
 
     private int mLastRequestedPage;
+    private boolean mFirstLoad = true;
+    private CompositeSubscription mSubscriptions;
 
     private final ArticlesContract.View mArticlesView;
     private final ArticlesRepository mArticlesRepository;
@@ -27,13 +31,23 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
         this.mArticlesRepository = checkNotNull(articlesRepository);
         this.mArticlesView = checkNotNull(articleListView);
         this.mArticlesView.setPresenter(this);
+        this.mSubscriptions = new CompositeSubscription();
     }
 
     @Override
     public void init(int type) {
         mArticlesView.setupRecyclerView();
         mArticlesView.setupToolBar();
-        fetchNewPage();
+    }
+
+    @Override
+    public void subscribe() {
+        fetchNewPage(false);
+    }
+
+    @Override
+    public void unsubscribe() {
+        mSubscriptions.clear();
     }
 
     @Override
@@ -53,10 +67,20 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     }
 
     @Override
-    public void fetchNewPage() {
+    public void fetchNewPage(boolean forceReload) {
         mLastRequestedPage += 1;
 
-        mArticlesRepository.getPageObservable(mLastRequestedPage)
+        //TODO Check if network is available
+        if (forceReload || mFirstLoad) {
+            mArticlesRepository.invalidateCache();
+            mFirstLoad = false;
+        }
+
+        Subscription articleSubscription = mArticlesRepository.getPageObservable(mLastRequestedPage)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mArticlesView::addNewPage);
+
+        mSubscriptions.add(articleSubscription);
+
     }
 }

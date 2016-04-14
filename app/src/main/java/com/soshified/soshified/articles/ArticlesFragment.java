@@ -16,11 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.annimon.stream.Stream;
 import com.soshified.soshified.R;
 import com.soshified.soshified.data.Article;
 
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -72,14 +70,21 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
                     ContextCompat.getColor(getActivity(), R.color.primary)));
         }
 
+        mPresenter.init(ArticlesPresenter.ARTICLE_TYPE_NEWS);
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.subscribe();
+    }
 
-        mPresenter.init(ArticlesPresenter.ARTICLE_TYPE_NEWS);
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.unsubscribe();
     }
 
     @Override
@@ -101,7 +106,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
 
                     if(!mLoadingItems && (mItemsVisible + mItemsPast) >= mItemsTotal - 10) {
                         mLoadingItems = true;
-                        mPresenter.fetchNewPage();
+                        mPresenter.fetchNewPage(false);
                     }
                 }
             }

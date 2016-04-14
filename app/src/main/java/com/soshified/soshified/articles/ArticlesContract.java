@@ -15,9 +15,13 @@ public class ArticlesContract {
 
         void init(int type);
 
+        void subscribe();
+
+        void unsubscribe();
+
         void fetchLatestArticles();
 
-        void fetchNewPage();
+        void fetchNewPage(boolean forceReload);
 
     }
 

@@ -3,14 +3,11 @@ package com.soshified.soshified.data.source;
 import android.support.annotation.NonNull;
 
 import com.soshified.soshified.data.Article;
-import com.soshified.soshified.data.source.local.RealmArticle;
 
 import java.util.HashMap;
 import java.util.List;
 
-import io.realm.Realm;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Implementation that loads articles from either Soshified Servers or a local database.
@@ -25,7 +22,7 @@ public class ArticlesRepository implements ArticlesDataSource {
 
     private HashMap<Integer, Article> mCachedArticles = new HashMap<>();
 
-    private boolean mCacheIsDirty = false;
+    private boolean mCacheIsValid = true;
 
     private ArticlesRepository(@NonNull ArticlesDataSource remoteDataSource,
                               @NonNull ArticlesDataSource localDataSource) {
@@ -41,6 +38,10 @@ public class ArticlesRepository implements ArticlesDataSource {
         return INSTANCE;
     }
 
+    public void invalidateCache() {
+        mCacheIsValid = false;
+    }
+
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
         Observable<List<Article>> cachedTasks = Observable.from(mCachedArticles.values()).toList();
@@ -52,11 +53,12 @@ public class ArticlesRepository implements ArticlesDataSource {
                 .doOnNext(this::saveArticle)
                 .toList();
 
-        if (mCacheIsDirty)
+        if (!mCacheIsValid)
             return remoteArticlesWithLocalUpdate;
 
         return Observable
-                .concat(localArticles, remoteArticlesWithLocalUpdate)
+                .concat(cachedTasks, localArticles, remoteArticlesWithLocalUpdate)
+                .filter(articles -> articles.size() == 25)
                 .first();
     }
 
