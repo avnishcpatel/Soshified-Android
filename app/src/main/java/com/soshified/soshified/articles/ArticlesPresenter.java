@@ -21,7 +21,6 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     public static final int ARTICLE_TYPE_SUBS = 2;
 
     private int mLastRequestedPage;
-    private boolean mFirstLoad = true;
     private CompositeSubscription mSubscriptions;
 
     private final ArticlesContract.View mArticlesView;
@@ -71,9 +70,8 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
         mLastRequestedPage += 1;
 
         //TODO Check if network is available
-        if (forceReload || mFirstLoad) {
+        if (forceReload) {
             mArticlesRepository.invalidateCache();
-            mFirstLoad = false;
         }
 
         Subscription articleSubscription = mArticlesRepository.getPageObservable(mLastRequestedPage)

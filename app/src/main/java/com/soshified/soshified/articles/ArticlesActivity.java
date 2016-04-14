@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.soshified.soshified.R;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.local.LocalArticlesDataSource;
-import com.soshified.soshified.data.source.RemoteArticlesDataSource;
+import com.soshified.soshified.data.source.remote.RemoteArticlesDataSource;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

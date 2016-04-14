@@ -1,9 +1,10 @@
-package com.soshified.soshified.data.source;
+package com.soshified.soshified.data.source.remote;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.soshified.soshified.articles.ArticlesPresenter;
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.source.ArticlesDataSource;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.soshified.soshified.data.source;
+package com.soshified.soshified.data.source.remote;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
