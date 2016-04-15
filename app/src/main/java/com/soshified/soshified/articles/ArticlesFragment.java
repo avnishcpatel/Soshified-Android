@@ -134,8 +134,8 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     }
 
     @Override
-    public void hideRefreshing() {
-        mRefreshLayout.setRefreshing(false);
+    public void setRefreshing(boolean refreshing) {
+        mRefreshLayout.post(() -> mRefreshLayout.setRefreshing(refreshing));
     }
 
     @Override

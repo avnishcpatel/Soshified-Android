@@ -37,7 +37,7 @@ public class ArticlesContract {
 
         Article getRecentArticle();
 
-        void hideRefreshing();
+        void setRefreshing(boolean refreshing);
 
         void addNewPage(List<Article> articles);
 

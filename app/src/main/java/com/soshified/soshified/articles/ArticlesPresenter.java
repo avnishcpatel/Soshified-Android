@@ -8,7 +8,6 @@ import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -54,6 +53,9 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     @Override
     public void fetchLatestArticles() {
         long mostRecentDate = DateUtils.getUnixTimeStamp(mArticlesView.getRecentArticle().getDate());
+        mArticlesView.setRefreshing(true);
+
+        mArticlesRepository.invalidateCache();
         mArticlesRepository.getPageObservable(1)
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
@@ -62,7 +64,8 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
                     long articleDate = DateUtils.getUnixTimeStamp(article.getDate());
                     return articleDate > mostRecentDate;
                 })
-                .finallyDo(mArticlesView::hideRefreshing)
+                .finallyDo(() -> mArticlesView.setRefreshing(false))
+                .doOnError(throwable -> mArticlesView.setRefreshing(false))
                 .subscribe(mArticlesView::addNewArticle);
     }
 
@@ -70,13 +73,18 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     public void fetchNewPage(boolean forceReload) {
         mLastRequestedPage += 1;
 
-        if (forceReload || Realm.getDefaultInstance().where(RealmArticle.class).count() == 0) {
+        long localArticles = Realm.getDefaultInstance().where(RealmArticle.class).count();
+
+        if (forceReload || localArticles != (mLastRequestedPage * 25)) {
             mArticlesRepository.invalidateCache();
         }
 
         Subscription articleSubscription = mArticlesRepository.getPageObservable(mLastRequestedPage)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mArticlesView::addNewPage);
+                .subscribe(articles -> {
+                    mArticlesView.addNewPage(articles);
+                    fetchLatestArticles();
+                });
 
         mSubscriptions.add(articleSubscription);
 
