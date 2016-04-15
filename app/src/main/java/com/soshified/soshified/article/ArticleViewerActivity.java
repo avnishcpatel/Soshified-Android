@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -29,9 +30,6 @@ import com.soshified.soshified.util.TextUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -40,7 +38,7 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;
 
-    ArticlePresenter articlePresenter;
+    ArticleContract.Presenter articlePresenter;
 
     @Bind(R.id.news_view_toolbar)  Toolbar mToolbar;
     @Bind(R.id.news_view_appbar) AppBarLayout mAppBarLayout;
@@ -129,6 +127,11 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
     }
 
     @Override
+    public void setPresenter(@NonNull ArticleContract.Presenter presenter) {
+        this.articlePresenter = presenter;
+    }
+
+    @Override
     public void loadHeaderImage(String imageUrl) {
 
         Picasso.with(this)
@@ -161,7 +164,7 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
     }
 
     @Override
-    public void initToolbar() {
+    public void setupToolbar() {
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
 
             //Hides/Shows toolbar title depending on scroll amount

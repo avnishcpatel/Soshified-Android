@@ -15,6 +15,7 @@ public class ArticlePresenter implements ArticleContract.Presenter {
 
     public ArticlePresenter(ArticleContract.View view) {
         this.mView = view;
+        mView.setPresenter(this);
     }
 
     @Override
@@ -23,7 +24,7 @@ public class ArticlePresenter implements ArticleContract.Presenter {
         parsePost(mArticle.getContent());
         parseMeta();
 
-        mView.initToolbar();
+        mView.setupToolbar();
         mView.loadHeaderImage(mArticle.getThumbnail());
     }
 

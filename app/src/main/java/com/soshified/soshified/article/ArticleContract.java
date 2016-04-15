@@ -1,9 +1,11 @@
 package com.soshified.soshified.article;
 
+import android.support.annotation.NonNull;
+
 import com.soshified.soshified.data.Article;
 
 /**
- * Created by david on 4/15/16.
+ * Class that holds the interfaces for the Presenter and View
  */
 public class ArticleContract {
 
@@ -22,9 +24,11 @@ public class ArticleContract {
 
     public interface View {
 
+        void setPresenter(@NonNull Presenter presenter);
+
         void loadHeaderImage(String imageUrl);
 
-        void initToolbar();
+        void setupToolbar();
 
         void loadPostContent(String postContent);
 
