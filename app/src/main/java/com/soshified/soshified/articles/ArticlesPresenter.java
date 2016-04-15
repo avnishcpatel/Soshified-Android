@@ -1,8 +1,10 @@
 package com.soshified.soshified.articles;
 
 import com.soshified.soshified.data.source.ArticlesRepository;
+import com.soshified.soshified.data.source.local.RealmArticle;
 import com.soshified.soshified.util.DateUtils;
 
+import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -68,8 +70,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     public void fetchNewPage(boolean forceReload) {
         mLastRequestedPage += 1;
 
-        //TODO Check if network is available
-        if (forceReload) {
+        if (forceReload || Realm.getDefaultInstance().where(RealmArticle.class).count() == 0) {
             mArticlesRepository.invalidateCache();
         }
 

@@ -3,11 +3,14 @@ package com.soshified.soshified.data.source;
 import android.support.annotation.NonNull;
 
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.source.local.RealmArticle;
 
 import java.util.HashMap;
 import java.util.List;
 
+import io.realm.Realm;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Implementation that loads articles from either Soshified Servers or a local database.
@@ -44,7 +47,7 @@ public class ArticlesRepository implements ArticlesDataSource {
 
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
-        Observable<List<Article>> cachedTasks = Observable.from(mCachedArticles.values()).toList();
+        Observable<List<Article>> cachedArticles = Observable.from(mCachedArticles.values()).toList();
         Observable<List<Article>> remoteArticles = mRemoteDataSource.getPageObservable(page);
         Observable<List<Article>> localArticles = mLocalDataSource.getPageObservable(page);
 
@@ -57,8 +60,8 @@ public class ArticlesRepository implements ArticlesDataSource {
             return remoteArticlesWithLocalUpdate;
 
         return Observable
-                .concat(cachedTasks, localArticles, remoteArticlesWithLocalUpdate)
-                .filter(articles -> articles.size() == 25)
+                .concat(cachedArticles, localArticles, remoteArticlesWithLocalUpdate)
+                .filter(articles -> articles.size() != 0)
                 .first();
     }
 
