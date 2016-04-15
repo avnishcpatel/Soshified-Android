@@ -3,14 +3,11 @@ package com.soshified.soshified.data.source;
 import android.support.annotation.NonNull;
 
 import com.soshified.soshified.data.Article;
-import com.soshified.soshified.data.source.local.RealmArticle;
 
 import java.util.HashMap;
 import java.util.List;
 
-import io.realm.Realm;
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Implementation that loads articles from either Soshified Servers or a local database.
@@ -22,6 +19,11 @@ public class ArticlesRepository implements ArticlesDataSource {
 
     private ArticlesDataSource mRemoteDataSource;
     private ArticlesDataSource mLocalDataSource;
+
+    public static final int ARTICLE_TYPE_NEWS = 0;
+    public static final int ARTICLE_TYPE_STYLE = 1;
+    public static final int ARTICLE_TYPE_SUBS = 2;
+
 
     private HashMap<Integer, Article> mCachedArticles = new HashMap<>();
 

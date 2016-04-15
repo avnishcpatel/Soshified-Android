@@ -17,10 +17,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ArticlesPresenter implements ArticlesContract.Presenter {
 
-    public static final int ARTICLE_TYPE_NEWS = 0;
-    public static final int ARTICLE_TYPE_STYLE = 1;
-    public static final int ARTICLE_TYPE_SUBS = 2;
-
     private int mLastRequestedPage;
     private CompositeSubscription mSubscriptions;
 

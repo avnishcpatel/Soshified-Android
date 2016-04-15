@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 
 import com.soshified.soshified.R;
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.source.ArticlesRepository;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
                     ContextCompat.getColor(getActivity(), R.color.primary)));
         }
 
-        mPresenter.init(ArticlesPresenter.ARTICLE_TYPE_NEWS);
+        mPresenter.init(ArticlesRepository.ARTICLE_TYPE_NEWS);
 
         return view;
     }

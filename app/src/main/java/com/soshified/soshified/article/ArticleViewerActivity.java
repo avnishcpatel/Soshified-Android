@@ -25,6 +25,9 @@ import android.widget.TextView;
 
 import com.soshified.soshified.R;
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.source.ArticlesRepository;
+import com.soshified.soshified.data.source.local.LocalArticlesDataSource;
+import com.soshified.soshified.data.source.remote.RemoteArticlesDataSource;
 import com.soshified.soshified.util.AnimUtils;
 import com.soshified.soshified.util.TextUtils;
 import com.squareup.picasso.Callback;
@@ -79,6 +82,15 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
 
             getWindow().getSharedElementReturnTransition().addListener(returnHomeListener);
         }
+
+        int type = getIntent().getIntExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
+
+
+        ArticlesRepository articlesRepository =
+                ArticlesRepository.getInstance(RemoteArticlesDataSource.getInstance(type),
+                        LocalArticlesDataSource.getInstance(type));
+
+        new ArticlePresenter(articlesRepository, this);
     }
 
     @Override

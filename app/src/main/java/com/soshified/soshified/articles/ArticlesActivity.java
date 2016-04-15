@@ -21,7 +21,7 @@ public class ArticlesActivity extends AppCompatActivity {
     @Bind(R.id.main_navigation_view) NavigationView mNavigationView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
 
-    private int mCurrentType = ArticlesPresenter.ARTICLE_TYPE_NEWS;
+    private int mCurrentType = ArticlesRepository.ARTICLE_TYPE_NEWS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

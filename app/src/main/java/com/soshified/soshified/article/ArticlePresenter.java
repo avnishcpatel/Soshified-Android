@@ -1,6 +1,7 @@
 package com.soshified.soshified.article;
 
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.util.DateUtils;
 import com.soshified.soshified.util.ParseContent;
 import com.soshified.soshified.util.TextUtils;
@@ -11,10 +12,12 @@ import com.soshified.soshified.util.TextUtils;
 public class ArticlePresenter implements ArticleContract.Presenter {
 
     ArticleContract.View mView;
+    ArticlesRepository mRepository;
     Article mArticle;
 
-    public ArticlePresenter(ArticleContract.View view) {
+    public ArticlePresenter(ArticlesRepository articlesRepository, ArticleContract.View view) {
         this.mView = view;
+        this.mRepository = articlesRepository;
         mView.setPresenter(this);
     }
 
