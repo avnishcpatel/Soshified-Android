@@ -35,7 +35,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ArticleViewerActivity extends AppCompatActivity implements ArticleView {
+public class ArticleViewerActivity extends AppCompatActivity implements ArticleContract.View {
 
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;

@@ -1,18 +1,41 @@
 package com.soshified.soshified.article;
 
-
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.util.DateUtils;
+import com.soshified.soshified.util.ParseContent;
+import com.soshified.soshified.util.TextUtils;
 
-public interface ArticlePresenter {
+/**
+ * Presenter Implementation to deal with all the 'presenter' stuff for ArticleView
+ */
+public class ArticlePresenter implements ArticleContract.Presenter {
 
-    void init(Article mArticle);
+    ArticleContract.View mView;
+    Article mArticle;
 
-    /**
-     * Fires the ParseContent AsyncTask and waits for a response to be then passed back to the view
-     * @param postContent Un-parsed post content
-     */
-    void parsePost(String postContent);
+    public ArticlePresenter(ArticleContract.View view) {
+        this.mView = view;
+    }
 
-    void parseMeta();
+    @Override
+    public void init(Article article) {
+        this.mArticle = article;
+        parsePost(mArticle.getContent());
+        parseMeta();
 
+        mView.initToolbar();
+        mView.loadHeaderImage(mArticle.getThumbnail());
+    }
+
+    @Override
+    public void parsePost(String postContent) {
+        new ParseContent(mParsedPostContent -> mView.loadPostContent(mParsedPostContent)).execute(postContent);
+    }
+
+    @Override
+    public void parseMeta() {
+        String mTitle = TextUtils.fromHtml(mArticle.getTitle());
+        String mDate = DateUtils.parseWordPressFormat(mArticle.getDate());
+        mView.loadPostMeta(mTitle, mArticle.getAuthorName(), mDate);
+    }
 }
