@@ -32,6 +32,8 @@ import com.soshified.soshified.util.TextUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -154,9 +156,15 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
 
                         Drawable drawable = mBackdrop.getDrawable();
 
+                        boolean supportRC = false;
+
+                        //Native RenderScript only supports 17+
+                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN)
+                            supportRC = true;
+
                         if (drawable instanceof BitmapDrawable) {
                             BitmapDrawable mBlurredBitmap = AnimUtils.blur(ArticleViewerActivity.this,
-                                    ((BitmapDrawable) drawable).getBitmap());
+                                    ((BitmapDrawable) drawable).getBitmap(), supportRC);
                             mBlurredBackdrop.setBackground(mBlurredBitmap);
                         }
 
