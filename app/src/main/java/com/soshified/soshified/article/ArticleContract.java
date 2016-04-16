@@ -11,15 +11,7 @@ public class ArticleContract {
 
     public interface Presenter {
 
-        void init(Article mArticle);
-
-        /**
-         * Fires the ParseContent AsyncTask and waits for a response to be then passed back to the view
-         * @param postContent Un-parsed post content
-         */
-        void parsePost(String postContent);
-
-        void parseMeta();
+        void showArticle(Article article);
     }
 
     public interface View {

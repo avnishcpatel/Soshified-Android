@@ -11,37 +11,25 @@ import com.soshified.soshified.util.TextUtils;
 public class ArticlePresenter implements ArticleContract.Presenter {
 
     private ArticleContract.View mView;
-    private ArticlesRepository mRepository;
-    Article mArticle;
 
 
     public ArticlePresenter(ArticlesRepository articlesRepository, int articleID, ArticleContract.View view) {
         mView = view;
-        mRepository = articlesRepository;
         mView.setPresenter(this);
-        mRepository.getArticleObservable(articleID)
-                .subscribe(this::init);
+        articlesRepository.getArticleObservable(articleID)
+                .subscribe(this::showArticle);
     }
 
     @Override
-    public void init(Article article) {
-        this.mArticle = article;
-        parsePost(mArticle.getPostContent());
-        parseMeta();
+    public void showArticle(Article article) {
 
         mView.setupToolbar();
-        mView.loadHeaderImage(mArticle.getThumbnail());
-    }
+        mView.loadPostContent(article.getPostContent());
 
-    @Override
-    public void parsePost(String postContent) {
-        mView.loadPostContent(postContent);
-    }
+        String mTitle = TextUtils.fromHtml(article.getTitle());
+        String mDate = DateUtils.parseWordPressFormat(article.getDate());
+        mView.loadPostMeta(mTitle, article.getAuthorName(), mDate);
 
-    @Override
-    public void parseMeta() {
-        String mTitle = TextUtils.fromHtml(mArticle.getTitle());
-        String mDate = DateUtils.parseWordPressFormat(mArticle.getDate());
-        mView.loadPostMeta(mTitle, mArticle.getAuthorName(), mDate);
+        mView.loadHeaderImage(article.getThumbnail());
     }
 }

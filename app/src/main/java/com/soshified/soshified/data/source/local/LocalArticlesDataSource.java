@@ -55,6 +55,10 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
 
     @Override
     public Observable<Article> getArticleObservable(int id) {
-        return null;
+        return Realm.getDefaultInstance().where(RealmArticle.class).equalTo("id", id).findAllAsync()
+                .asObservable()
+                .flatMap(Observable::from)
+                .first()
+                .map(realmArticle -> new Article().copyArticle(realmArticle));
     }
 }
