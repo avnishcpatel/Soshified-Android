@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ArticlesPresenter implements ArticlesContract.Presenter {
 
-    private int mLastRequestedPage;
+    private int mLastRequestedPage = 1;
     private CompositeSubscription mSubscriptions;
 
     private final ArticlesContract.View mArticlesView;
@@ -48,7 +48,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
 
     @Override
     public void fetchLatestArticles() {
-        long mostRecentDate = DateUtils.getUnixTimeStamp(mArticlesView.getRecentArticle().getDate());
+        long mostRecentDate = mArticlesView.getRecentArticle().getDate();
         mArticlesView.setRefreshing(true);
 
         mArticlesRepository.invalidateCache();
@@ -57,7 +57,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
                 .flatMap(Observable::from)
                 .take(10)
                 .filter(article -> {
-                    long articleDate = DateUtils.getUnixTimeStamp(article.getDate());
+                    long articleDate = article.getDate();
                     return articleDate > mostRecentDate;
                 })
                 .finallyDo(() -> mArticlesView.setRefreshing(false))
@@ -67,19 +67,20 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
 
     @Override
     public void fetchNewPage(boolean forceReload) {
-        mLastRequestedPage += 1;
 
         long localArticles = Realm.getDefaultInstance().where(RealmArticle.class).count();
 
-        if (forceReload || localArticles != (mLastRequestedPage * 25)) {
+        if (forceReload || localArticles < 25) {
             mArticlesRepository.invalidateCache();
         }
 
         Subscription articleSubscription = mArticlesRepository.getPageObservable(mLastRequestedPage)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(articles -> {
+                    mLastRequestedPage += 1;
                     mArticlesView.addNewPage(articles);
-                    fetchLatestArticles();
+                    if (localArticles != 0)
+                        fetchLatestArticles();
                 });
 
         mSubscriptions.add(articleSubscription);

@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.util.DateUtils;
 
 import java.lang.reflect.Type;
 
@@ -19,6 +20,8 @@ public class ArticleDeserializer implements JsonDeserializer<Article> {
         Article article = gson.fromJson(json, Article.class);
         article.setAuthorName(json.getAsJsonObject().get("author")
                 .getAsJsonObject().get("name").getAsString());
+
+        article.setDate(DateUtils.getUnixTimeStamp(json.getAsJsonObject().get("date").getAsString()));
 
         article.setThumbnail(json.getAsJsonObject().get("thumbnail_images")
                 .getAsJsonObject().get("full").getAsJsonObject().get("url").getAsString());

@@ -10,13 +10,14 @@ import io.realm.annotations.PrimaryKey;
  */
 public class RealmArticle extends RealmObject{
 
-    private String title, date, content, thumbnail, authorName;
+    private String title, content, thumbnail, authorName;
+    private long postDate;
     @PrimaryKey private int id;
 
     public RealmArticle copyArticle(Article article) {
         id = article.getId();
         title = article.getTitle();
-        date = article.getDate();
+        postDate = article.getDate();
         content = article.getContent();
         thumbnail = article.getThumbnail();
         authorName = article.getAuthorName();
@@ -27,8 +28,8 @@ public class RealmArticle extends RealmObject{
         return id;
     }
 
-    public String getDate() {
-        return date;
+    public long getDate() {
+        return postDate;
     }
 
     public String getTitle() {

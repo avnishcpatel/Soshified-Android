@@ -10,6 +10,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -33,7 +34,8 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
 
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
-        return Realm.getDefaultInstance().where(RealmArticle.class).findAllAsync().asObservable()
+        return Realm.getDefaultInstance().where(RealmArticle.class)
+                .findAllSortedAsync("postDate", Sort.DESCENDING).asObservable()
                 .filter(RealmResults::isLoaded)
                 .flatMap(Observable::from)
                 .buffer(25)

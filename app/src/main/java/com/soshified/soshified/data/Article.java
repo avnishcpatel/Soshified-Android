@@ -7,13 +7,14 @@ import com.soshified.soshified.data.source.local.RealmArticle;
  */
 public class Article {
 
-    private String title, date, content, thumbnail, authorName;
+    private String title, content, thumbnail, authorName;
+    private long postDate;
     private int id;
 
     public Article copyArticle(RealmArticle article) {
         id = article.getId();
         title = article.getTitle();
-        date = article.getDate();
+        postDate = article.getDate();
         content = article.getContent();
         thumbnail = article.getThumbnail();
         authorName = article.getAuthorName();
@@ -28,12 +29,12 @@ public class Article {
         this.title = title;
     }
 
-    public String getDate() {
-        return date;
+    public long getDate() {
+        return postDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate(long date) {
+        this.postDate = date;
     }
 
     public String getContent() {
