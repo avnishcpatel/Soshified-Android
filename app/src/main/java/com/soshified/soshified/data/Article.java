@@ -7,7 +7,7 @@ import com.soshified.soshified.data.source.local.RealmArticle;
  */
 public class Article {
 
-    private String title, content, thumbnail, authorName;
+    private String title, postContent, thumbnail, authorName;
     private long postDate;
     private int id;
 
@@ -15,7 +15,7 @@ public class Article {
         id = article.getId();
         title = article.getTitle();
         postDate = article.getDate();
-        content = article.getContent();
+        postContent = article.getContent();
         thumbnail = article.getThumbnail();
         authorName = article.getAuthorName();
         return this;
@@ -37,12 +37,12 @@ public class Article {
         this.postDate = date;
     }
 
-    public String getContent() {
-        return content;
+    public String getPostContent() {
+        return postContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPostContent(String postContent) {
+        this.postContent = postContent;
     }
 
     public String getThumbnail() {

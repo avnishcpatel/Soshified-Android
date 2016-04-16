@@ -18,7 +18,7 @@ public class RealmArticle extends RealmObject{
         id = article.getId();
         title = article.getTitle();
         postDate = article.getDate();
-        content = article.getContent();
+        content = article.getPostContent();
         thumbnail = article.getThumbnail();
         authorName = article.getAuthorName();
         return this;

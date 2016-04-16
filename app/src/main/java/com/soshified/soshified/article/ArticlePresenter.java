@@ -3,7 +3,6 @@ package com.soshified.soshified.article;
 import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.util.DateUtils;
-import com.soshified.soshified.util.ParseContent;
 import com.soshified.soshified.util.TextUtils;
 
 /**
@@ -27,7 +26,7 @@ public class ArticlePresenter implements ArticleContract.Presenter {
     @Override
     public void init(Article article) {
         this.mArticle = article;
-        parsePost(mArticle.getContent());
+        parsePost(mArticle.getPostContent());
         parseMeta();
 
         mView.setupToolbar();
@@ -36,7 +35,7 @@ public class ArticlePresenter implements ArticleContract.Presenter {
 
     @Override
     public void parsePost(String postContent) {
-        new ParseContent(mParsedPostContent -> mView.loadPostContent(mParsedPostContent)).execute(postContent);
+        mView.loadPostContent(postContent);
     }
 
     @Override
