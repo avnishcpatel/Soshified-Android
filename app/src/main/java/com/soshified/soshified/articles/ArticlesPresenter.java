@@ -19,6 +19,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
 
     private int mLastRequestedPage = 1;
     private CompositeSubscription mSubscriptions;
+    private boolean mfirstLaunch = true;
 
     private final ArticlesContract.View mArticlesView;
     private final ArticlesRepository mArticlesRepository;
@@ -79,8 +80,10 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
                 .subscribe(articles -> {
                     mLastRequestedPage += 1;
                     mArticlesView.addNewPage(articles);
-                    if (localArticles != 0)
+                    if (localArticles != 0 && mfirstLaunch) {
                         fetchLatestArticles();
+                        mfirstLaunch = false;
+                    }
                 });
 
         mSubscriptions.add(articleSubscription);
