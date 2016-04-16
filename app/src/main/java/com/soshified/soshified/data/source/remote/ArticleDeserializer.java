@@ -30,8 +30,13 @@ public class ArticleDeserializer implements JsonDeserializer<Article> {
 
         article.setDate(DateUtils.getUnixTimeStamp(root.get("date").getAsString()));
 
-        article.setThumbnail(root.get("thumbnail_images")
-                .getAsJsonObject().get("full").getAsJsonObject().get("url").getAsString());
+        try {
+
+            article.setThumbnail(root.get("thumbnail_images")
+                    .getAsJsonObject().get("full").getAsJsonObject().get("url").getAsString());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         article.setPostContent(parsePost(root.get("content").getAsString()));
 
