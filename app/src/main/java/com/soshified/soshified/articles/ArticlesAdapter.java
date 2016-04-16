@@ -76,9 +76,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
                     .into(holder.mArticleImage);
 
             holder.itemView.setOnClickListener(v -> {
-                Pair<View, String> p1 = Pair.create((View) holder.mArticleImage, "newsImage");
-//                    ActivityOptionsCompat options = ActivityOptionsCompat
-//                            .makeSceneTransitionAnimation(mActivity, p1);
+                Pair<View, String> p1 = Pair.create((View) holder.mArticleImage, "articleImage");
 
                 mListener.onClick(article, p1);
             });

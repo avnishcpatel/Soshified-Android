@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -55,6 +56,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new ArticlesAdapter(getContext(), (article, transitionPair) -> {
@@ -62,7 +64,9 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
             Intent intent = new Intent(getContext(), ArticleActivity.class);
             intent.putExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
             intent.putExtra("article_id", article.getId());
-            startActivity(intent);
+            ActivityOptionsCompat options = ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(getActivity(), transitionPair);
+            startActivity(intent, options.toBundle());
         });
     }
 
