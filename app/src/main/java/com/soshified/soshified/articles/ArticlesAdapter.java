@@ -47,12 +47,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_FOOTER) {
             View footer = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.news_list_progress_item, parent, false);
+                    .inflate(R.layout.article_list_progress_item, parent, false);
             return new ProgressViewHolder(footer);
         }
 
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.news_list_item, parent, false);
+                .inflate(R.layout.article_list_item, parent, false);
         return new ArticleViewHolder(v);
     }
 
@@ -63,9 +63,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
             final ArticleViewHolder holder = (ArticleViewHolder) viewHolder;
             final Article article = mArticles.get(position);
 
-            holder.mNewsTitle.setText(Html.fromHtml(article.getTitle()));
+            holder.mArticleTitle.setText(Html.fromHtml(article.getTitle()));
 
-            holder.mNewsSubtitle.setText(TextUtils.formatStringRes(mContext,
+            holder.mArticleSubtitle.setText(TextUtils.formatStringRes(mContext,
                     R.string.post_subtitle, new String[]{article.getAuthorName(),
                             DateUtils.parseWordPressFormat(article.getDate())}));
 
@@ -73,10 +73,10 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
                     .load(TextUtils.validateImageUrl(article.getThumbnail()))
                     .error(R.color.primary)
                     .placeholder(R.color.primary_light)
-                    .into(holder.mNewsImage);
+                    .into(holder.mArticleImage);
 
             holder.itemView.setOnClickListener(v -> {
-                Pair<View, String> p1 = Pair.create((View) holder.mNewsImage, "newsImage");
+                Pair<View, String> p1 = Pair.create((View) holder.mArticleImage, "newsImage");
 //                    ActivityOptionsCompat options = ActivityOptionsCompat
 //                            .makeSceneTransitionAnimation(mActivity, p1);
 
@@ -125,9 +125,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
     }
 
     public class ArticleViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.news_list_item_title) TextView mNewsTitle;
-        @Bind(R.id.news_list_item_subtitle) TextView mNewsSubtitle;
-        @Bind(R.id.news_list_item_image) ImageView mNewsImage;
+        @Bind(R.id.article_list_item_title) TextView mArticleTitle;
+        @Bind(R.id.article_list_item_subtitle) TextView mArticleSubtitle;
+        @Bind(R.id.article_list_item_image) ImageView mArticleImage;
 
         View itemView;
 

@@ -32,35 +32,33 @@ import com.soshified.soshified.util.TextUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ArticleViewerActivity extends AppCompatActivity implements ArticleContract.View {
+public class ArticleActivity extends AppCompatActivity implements ArticleContract.View {
 
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;
 
     ArticleContract.Presenter articlePresenter;
 
-    @Bind(R.id.news_view_toolbar)  Toolbar mToolbar;
-    @Bind(R.id.news_view_appbar) AppBarLayout mAppBarLayout;
-    @Bind(R.id.news_view_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @Bind(R.id.news_view_backdrop) ImageView mBackdrop;
-    @Bind(R.id.news_view_backdrop_blur) ImageView mBlurredBackdrop;
-    @Bind(R.id.news_view_title) TextView mTitle;
-    @Bind(R.id.news_view_toolbar_title) TextView mToolbarTitle;
-    @Bind(R.id.news_view_subtitle) TextView mSubTitle;
-    @Bind(R.id.news_view_webView) WebView mWebView;
-    @Bind(R.id.news_view_scrollView) NestedScrollView mScrollView;
-    @Bind(R.id.news_view_progress) ProgressBar mProgressBar;
+    @Bind(R.id.article_view_toolbar)  Toolbar mToolbar;
+    @Bind(R.id.article_view_appbar) AppBarLayout mAppBarLayout;
+    @Bind(R.id.article_view_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @Bind(R.id.article_view_backdrop) ImageView mBackdrop;
+    @Bind(R.id.article_view_backdrop_blur) ImageView mBlurredBackdrop;
+    @Bind(R.id.article_view_title) TextView mTitle;
+    @Bind(R.id.article_view_toolbar_title) TextView mToolbarTitle;
+    @Bind(R.id.article_view_subtitle) TextView mSubTitle;
+    @Bind(R.id.article_view_webView) WebView mWebView;
+    @Bind(R.id.article_view_scrollView) NestedScrollView mScrollView;
+    @Bind(R.id.article_view_progress) ProgressBar mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_news_viewer);
+        setContentView(R.layout.article_activity);
 
         ButterKnife.bind(this);
 
@@ -74,7 +72,7 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
                         mScrollView.animate()
                                 .alpha(0f)
                                 .setDuration(100)
-                                .setInterpolator(AnimationUtils.loadInterpolator(ArticleViewerActivity.this,
+                                .setInterpolator(AnimationUtils.loadInterpolator(ArticleActivity.this,
                                         android.R.interpolator.linear_out_slow_in));
                     }
                 }
@@ -163,7 +161,7 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
                             supportRC = true;
 
                         if (drawable instanceof BitmapDrawable) {
-                            BitmapDrawable mBlurredBitmap = AnimUtils.blur(ArticleViewerActivity.this,
+                            BitmapDrawable mBlurredBitmap = AnimUtils.blur(ArticleActivity.this,
                                     ((BitmapDrawable) drawable).getBitmap(), supportRC);
                             mBlurredBackdrop.setBackground(mBlurredBitmap);
                         }
@@ -234,7 +232,7 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
     @Override
     public void loadPostMeta(String title, String author, String date) {
         mTitle.setText(title);
-        mSubTitle.setText(TextUtils.formatStringRes(ArticleViewerActivity.this,
+        mSubTitle.setText(TextUtils.formatStringRes(ArticleActivity.this,
                 R.string.post_subtitle, new String[]{author, date}));
 
 

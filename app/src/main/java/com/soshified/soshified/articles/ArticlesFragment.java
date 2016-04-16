@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.article.ArticleViewerActivity;
+import com.soshified.soshified.article.ArticleActivity;
 import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesRepository;
 
@@ -59,7 +59,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
         super.onCreate(savedInstanceState);
         mAdapter = new ArticlesAdapter(getContext(), (article, transitionPair) -> {
             //TODO Change when Style/Vids added
-            Intent intent = new Intent(getContext(), ArticleViewerActivity.class);
+            Intent intent = new Intent(getContext(), ArticleActivity.class);
             intent.putExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
             intent.putExtra("article_id", article.getId());
             startActivity(intent);
