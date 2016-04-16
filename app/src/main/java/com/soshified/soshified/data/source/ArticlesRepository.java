@@ -81,7 +81,7 @@ public class ArticlesRepository implements ArticlesDataSource {
 
         return Observable
                 .concat(cachedArticle, localArticle, remoteArticle)
-                .filter(article -> article != null)
+                .filter(article -> article != null && !article.getPostContent().equalsIgnoreCase(""))
                 .first();
 
     }
