@@ -72,4 +72,16 @@ public class ArticlesRepository implements ArticlesDataSource {
         mCachedArticles.put(article.getId(), article);
         mLocalDataSource.saveArticle(article);
     }
+
+    @Override
+    public Observable<Article> getArticleObservable(int id) {
+        Observable<Article> cachedArticle = Observable.just(mCachedArticles.get(id));
+        Observable<Article> remoteArticle = mRemoteDataSource.getArticleObservable(id);
+        Observable<Article> localArticle = mLocalDataSource.getArticleObservable(id);
+
+        return Observable
+                .concat(cachedArticle, localArticle, remoteArticle)
+                .first();
+
+    }
 }

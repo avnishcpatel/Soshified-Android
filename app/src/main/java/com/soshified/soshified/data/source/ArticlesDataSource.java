@@ -13,6 +13,9 @@ public interface ArticlesDataSource {
 
     Observable<List<Article>> getPageObservable(int page);
 
+    Observable<Article> getArticleObservable(int id);
+
     void saveArticle(Article article);
+
 
 }

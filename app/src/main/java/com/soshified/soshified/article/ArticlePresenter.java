@@ -11,14 +11,17 @@ import com.soshified.soshified.util.TextUtils;
  */
 public class ArticlePresenter implements ArticleContract.Presenter {
 
-    ArticleContract.View mView;
-    ArticlesRepository mRepository;
+    private ArticleContract.View mView;
+    private ArticlesRepository mRepository;
     Article mArticle;
 
-    public ArticlePresenter(ArticlesRepository articlesRepository, ArticleContract.View view) {
-        this.mView = view;
-        this.mRepository = articlesRepository;
+
+    public ArticlePresenter(ArticlesRepository articlesRepository, int articleID, ArticleContract.View view) {
+        mView = view;
+        mRepository = articlesRepository;
         mView.setPresenter(this);
+        mRepository.getArticleObservable(articleID)
+                .subscribe(this::init);
     }
 
     @Override

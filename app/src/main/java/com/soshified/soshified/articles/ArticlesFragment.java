@@ -1,5 +1,6 @@
 package com.soshified.soshified.articles;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.soshified.soshified.R;
+import com.soshified.soshified.article.ArticleViewerActivity;
 import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesRepository;
 
@@ -56,7 +58,11 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new ArticlesAdapter(getContext(), (article, transitionPair) -> {
-            //TODO Open Article
+            //TODO Change when Style/Vids added
+            Intent intent = new Intent(getContext(), ArticleViewerActivity.class);
+            intent.putExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
+            intent.putExtra("article_id", article.getId());
+            startActivity(intent);
         });
     }
 

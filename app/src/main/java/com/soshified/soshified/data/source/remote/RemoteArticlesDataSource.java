@@ -2,9 +2,9 @@ package com.soshified.soshified.data.source.remote;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.soshified.soshified.articles.ArticlesPresenter;
 import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesDataSource;
+import com.soshified.soshified.data.source.ArticlesRepository;
 
 import java.util.List;
 
@@ -26,13 +26,13 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
     private RemoteArticlesDataSource(int type){
         String jsonEndpoint;
         switch (type) {
-            case ArticlesPresenter.ARTICLE_TYPE_NEWS:
+            case ArticlesRepository.ARTICLE_TYPE_NEWS:
                 jsonEndpoint = "http://soshified.com/json";
                 break;
-            case ArticlesPresenter.ARTICLE_TYPE_STYLE:
+            case ArticlesRepository.ARTICLE_TYPE_STYLE:
                 jsonEndpoint = "whatever the style url is";
                 break;
-            case ArticlesPresenter.ARTICLE_TYPE_SUBS:
+            case ArticlesRepository.ARTICLE_TYPE_SUBS:
                 jsonEndpoint = "whatever the subs endpoint is";
                 break;
             default:
@@ -73,6 +73,11 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
     @Override
     public void saveArticle(Article article) {
 
+    }
+
+    @Override
+    public Observable<Article> getArticleObservable(int id) {
+        return null;
     }
 
     /**

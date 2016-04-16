@@ -50,4 +50,9 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
             realm.copyToRealmOrUpdate(realmArticle);
         });
     }
+
+    @Override
+    public Observable<Article> getArticleObservable(int id) {
+        return null;
+    }
 }

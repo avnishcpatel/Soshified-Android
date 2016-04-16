@@ -1,6 +1,7 @@
 package com.soshified.soshified.article;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -24,7 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soshified.soshified.R;
-import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.local.LocalArticlesDataSource;
 import com.soshified.soshified.data.source.remote.RemoteArticlesDataSource;
@@ -62,7 +62,6 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
         setContentView(R.layout.activity_news_viewer);
 
         ButterKnife.bind(this);
-        articlePresenter.init((Article) getIntent().getParcelableExtra("article"));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Transition.TransitionListener returnHomeListener = new AnimUtils.TransitionListenerAdapter(){
@@ -84,13 +83,13 @@ public class ArticleViewerActivity extends AppCompatActivity implements ArticleC
         }
 
         int type = getIntent().getIntExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
-
+        int articleID = getIntent().getIntExtra("article_id", 0);
 
         ArticlesRepository articlesRepository =
                 ArticlesRepository.getInstance(RemoteArticlesDataSource.getInstance(type),
                         LocalArticlesDataSource.getInstance(type));
 
-        new ArticlePresenter(articlesRepository, this);
+        new ArticlePresenter(articlesRepository, articleID, this);
     }
 
     @Override
