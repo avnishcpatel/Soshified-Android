@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +54,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     @Bind(R.id.article_view_webView) WebView mWebView;
     @Bind(R.id.article_view_scrollView) NestedScrollView mScrollView;
     @Bind(R.id.article_view_progress) ProgressBar mProgressBar;
+    @Bind(R.id.comments_fab) FloatingActionButton mFab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

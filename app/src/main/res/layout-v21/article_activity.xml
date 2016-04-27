@@ -91,9 +91,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="30dp"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:indeterminateTint="@color/primary"
-                android:indeterminateTintMode="src_in"/>
+                android:layout_height="50dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -139,5 +137,14 @@
         </FrameLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/comments_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_comment_multiple"
+        app:layout_anchor="@id/article_view_scrollView"
+        app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>
