@@ -1,7 +1,12 @@
 package com.soshified.soshified.data.source.local;
 
+import com.annimon.stream.Stream;
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.Comment;
 
+import java.util.ArrayList;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -10,8 +15,9 @@ import io.realm.annotations.PrimaryKey;
  */
 public class RealmArticle extends RealmObject{
 
-    private String title, content, thumbnail, authorName;
+    private String title, content, thumbnail, authorName, comment_status;
     private long postDate;
+    private RealmList<RealmComment> comments;
     @PrimaryKey private int id;
 
     public RealmArticle copyArticle(Article article) {
@@ -21,7 +27,19 @@ public class RealmArticle extends RealmObject{
         content = article.getPostContent();
         thumbnail = article.getThumbnail();
         authorName = article.getAuthorName();
+        comments = new RealmList<>();
+        Stream.of(article.getComments())
+                .map(comment -> new RealmComment().copyComment(comment))
+                .forEach(realmComment -> comments.add(realmComment));
         return this;
+    }
+
+    public RealmList<RealmComment> getComments() {
+        return comments;
+    }
+
+    public String getCommentStatus() {
+        return comment_status;
     }
 
     public int getId() {

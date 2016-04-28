@@ -1,15 +1,22 @@
 package com.soshified.soshified.data;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Function;
 import com.soshified.soshified.data.source.local.RealmArticle;
+import com.soshified.soshified.data.source.local.RealmComment;
+
+import java.util.ArrayList;
 
 /**
  * Object representation of a single article (Wordpress Post)
  */
 public class Article {
 
-    private String title, postContent, thumbnail, authorName;
+    private String title, postContent, thumbnail, authorName, comment_status;
     private long postDate;
     private int id;
+    private ArrayList<Comment> comments;
 
     public Article copyArticle(RealmArticle article) {
         id = article.getId();
@@ -18,7 +25,27 @@ public class Article {
         postContent = article.getContent();
         thumbnail = article.getThumbnail();
         authorName = article.getAuthorName();
+        comments = new ArrayList<>();
+        Stream.of(article.getComments())
+                .map(realmComment -> new Comment().copyComment(realmComment))
+                .forEach(comment -> comments.add(comment));
         return this;
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public String getCommentStatus() {
+        return comment_status;
+    }
+
+    public void setCommentStatus(String comment_status) {
+        this.comment_status = comment_status;
     }
 
     public String getTitle() {
