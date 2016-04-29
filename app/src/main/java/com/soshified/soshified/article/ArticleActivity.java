@@ -9,9 +9,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.MenuItem;
@@ -25,13 +30,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soshified.soshified.R;
+import com.soshified.soshified.data.Comment;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.local.LocalArticlesDataSource;
 import com.soshified.soshified.data.source.remote.RemoteArticlesDataSource;
+import com.soshified.soshified.ui.ElasticDragDismissFrameLayout;
+import com.soshified.soshified.ui.SimpleListItemDivider;
 import com.soshified.soshified.util.AnimUtils;
 import com.soshified.soshified.util.TextUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,7 +51,8 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     private boolean mIsTitleVisible = false;
     private boolean mEnterComplete = false;
 
-    ArticleContract.Presenter articlePresenter;
+    private ArticleContract.Presenter articlePresenter;
+    private AppBarLayout.Behavior mAppBarBehaviour;
 
     @Bind(R.id.article_view_toolbar)  Toolbar mToolbar;
     @Bind(R.id.article_view_appbar) AppBarLayout mAppBarLayout;
@@ -55,6 +66,11 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     @Bind(R.id.article_view_scrollView) NestedScrollView mScrollView;
     @Bind(R.id.article_view_progress) ProgressBar mProgressBar;
     @Bind(R.id.comments_fab) FloatingActionButton mFab;
+
+    // Comments View
+    @Bind(R.id.comments_draggable_view) ElasticDragDismissFrameLayout mCommentsView;
+    @Bind(R.id.comments_container) CardView mCommentsContainer;
+    @Bind(R.id.comments_list) RecyclerView mCommentsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +102,29 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         int type = getIntent().getIntExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
         int articleID = getIntent().getIntExtra("article_id", 0);
 
+        mFab.setOnClickListener(view -> {
+
+            if (mIsTitleVisible)
+                mCommentsView.setPadding(0, mToolbar.getHeight() + 25, 0, 0);
+            else
+                mCommentsView.setPadding(0, 0, 0, 0);
+
+            mCommentsContainer.setVisibility(View.VISIBLE);
+            mFab.hide();
+
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+            mAppBarBehaviour = (AppBarLayout.Behavior) params.getBehavior();
+
+            mAppBarBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+
+                @Override
+                public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                    return false;
+                }
+            });
+
+        });
+
         ArticlesRepository articlesRepository =
                 ArticlesRepository.getInstance(RemoteArticlesDataSource.getInstance(type),
                         LocalArticlesDataSource.getInstance(type));
@@ -110,6 +149,17 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     protected void onPause() {
         super.onPause();
         mWebView.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mCommentsContainer.getVisibility() == View.VISIBLE) {
+            mCommentsContainer.setVisibility(View.GONE);
+            //mAppBarBehaviour.setDragCallback(null);
+            mFab.show();
+        } else {
+            finish();
+        }
     }
 
     /**
@@ -240,5 +290,12 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
         String postTitle = TextUtils.fromHtml(title);
         mToolbarTitle.setText(postTitle);
+    }
+
+    @Override
+    public void loadComments(ArrayList<Comment> comments) {
+        mCommentsList.setLayoutManager(new LinearLayoutManager(this));
+        mCommentsList.addItemDecoration(new SimpleListItemDivider(this));
+        mCommentsList.setAdapter(new CommentsAdapter(comments));
     }
 }

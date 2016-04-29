@@ -3,6 +3,9 @@ package com.soshified.soshified.article;
 import android.support.annotation.NonNull;
 
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.Comment;
+
+import java.util.ArrayList;
 
 /**
  * Class that holds the interfaces for the Presenter and View
@@ -25,6 +28,8 @@ public class ArticleContract {
         void loadPostContent(String postContent);
 
         void loadPostMeta(String title, String author, String date);
+
+        void loadComments(ArrayList<Comment> comments);
 
     }
 

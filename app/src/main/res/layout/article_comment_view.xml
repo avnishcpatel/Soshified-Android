@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.soshified.soshified.ui.ElasticDragDismissFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/comments_draggable_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:dragDismissDistance="112dp"
+    app:dragDismissScale="0.95">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/comments_container"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="2dp">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/comments_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"/>
+
+    </android.support.v7.widget.CardView>
+
+</com.soshified.soshified.ui.ElasticDragDismissFrameLayout>

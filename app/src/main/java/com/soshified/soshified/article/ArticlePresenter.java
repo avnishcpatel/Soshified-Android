@@ -4,16 +4,17 @@ import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.util.DateUtils;
 import com.soshified.soshified.util.TextUtils;
+import com.soshified.soshified.article.ArticleContract.*;
 
 /**
  * Presenter Implementation to deal with all the 'presenter' stuff for ArticleView
  */
-public class ArticlePresenter implements ArticleContract.Presenter {
+public class ArticlePresenter implements Presenter {
 
-    private ArticleContract.View mView;
+    private View mView;
 
 
-    public ArticlePresenter(ArticlesRepository articlesRepository, int articleID, ArticleContract.View view) {
+    public ArticlePresenter(ArticlesRepository articlesRepository, int articleID, View view) {
         mView = view;
         mView.setPresenter(this);
         articlesRepository.getArticleObservable(articleID)
@@ -31,5 +32,7 @@ public class ArticlePresenter implements ArticleContract.Presenter {
         mView.loadPostMeta(mTitle, article.getAuthorName(), mDate);
 
         mView.loadHeaderImage(article.getThumbnail());
+
+        mView.loadComments(article.getComments());
     }
 }

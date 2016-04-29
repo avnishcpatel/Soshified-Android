@@ -47,12 +47,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_FOOTER) {
             View footer = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.article_list_progress_item, parent, false);
+                    .inflate(R.layout.articles_list_progress_item, parent, false);
             return new ProgressViewHolder(footer);
         }
 
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.article_list_item, parent, false);
+                .inflate(R.layout.articles_list_item, parent, false);
         return new ArticleViewHolder(v);
     }
 
