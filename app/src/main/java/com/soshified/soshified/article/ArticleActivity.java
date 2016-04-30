@@ -1,6 +1,7 @@
 package com.soshified.soshified.article;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -76,28 +77,15 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.article_activity);
-
         ButterKnife.bind(this);
 
-        // Shared Element Transition
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Transition.TransitionListener returnHomeListener = new AnimUtils.TransitionListenerAdapter(){
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-                @Override
-                public void onTransitionStart(Transition transition) {
-                    super.onTransitionStart(transition);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mEnterComplete) {
-                        mScrollView.animate()
-                                .alpha(0f)
-                                .setDuration(100)
-                                .setInterpolator(AnimationUtils.loadInterpolator(ArticleActivity.this,
-                                        android.R.interpolator.linear_out_slow_in));
-                    }
-                }
-            };
-
-            getWindow().getSharedElementReturnTransition().addListener(returnHomeListener);
-        }
+        mCollapsingToolbarLayout.setContentScrimColor(Color.TRANSPARENT);
+        mCollapsingToolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
+        mCollapsingToolbarLayout.setTitleEnabled(false);
 
         int type = getIntent().getIntExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
         int articleID = getIntent().getIntExtra("article_id", 0);
@@ -133,7 +121,9 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         if (mCommentsContainer.getVisibility() == View.VISIBLE) {
             dismissComments();
         } else {
-            finish();
+            super.onBackPressed();
+            mScrollView.setAlpha(1f);
+            mScrollView.animate().alpha(0f).setDuration(100).start();
         }
     }
 
@@ -206,7 +196,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     }
 
     @Override
-    public void setupToolbar() {
+    public void setupScroll() {
         // Hides/Shows toolbar title depending on scroll amount
         // Also changes the Alpha of the blurred background to give a nice effect
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -229,14 +219,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
             }
 
         });
-
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mCollapsingToolbarLayout.setContentScrimColor(Color.TRANSPARENT);
-        mCollapsingToolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
-        mCollapsingToolbarLayout.setTitleEnabled(false);
     }
 
     @SuppressLint("SetJavaScriptEnabled")

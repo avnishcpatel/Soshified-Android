@@ -24,7 +24,7 @@ public class ArticlePresenter implements Presenter {
     @Override
     public void showArticle(Article article) {
 
-        mView.setupToolbar();
+        mView.setupScroll();
         mView.loadPostContent(article.getPostContent());
         mView.loadHeaderImage(article.getThumbnail());
         mView.loadComments(article.getComments());

@@ -23,7 +23,7 @@ public class ArticleContract {
 
         void loadHeaderImage(String imageUrl);
 
-        void setupToolbar();
+        void setupScroll();
 
         void loadPostContent(String postContent);
 
