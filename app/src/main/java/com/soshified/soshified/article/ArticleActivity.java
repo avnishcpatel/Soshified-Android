@@ -11,7 +11,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -102,29 +101,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         int type = getIntent().getIntExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
         int articleID = getIntent().getIntExtra("article_id", 0);
 
-        mFab.setOnClickListener(view -> {
-
-            if (mIsTitleVisible)
-                mCommentsView.setPadding(0, mToolbar.getHeight() + 25, 0, 0);
-            else
-                mCommentsView.setPadding(0, 0, 0, 0);
-
-            mCommentsContainer.setVisibility(View.VISIBLE);
-            mFab.hide();
-
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
-            mAppBarBehaviour = (AppBarLayout.Behavior) params.getBehavior();
-
-            mAppBarBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-
-                @Override
-                public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                    return false;
-                }
-            });
-
-        });
-
         ArticlesRepository articlesRepository =
                 ArticlesRepository.getInstance(RemoteArticlesDataSource.getInstance(type),
                         LocalArticlesDataSource.getInstance(type));
@@ -154,9 +130,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     @Override
     public void onBackPressed() {
         if (mCommentsContainer.getVisibility() == View.VISIBLE) {
-            mCommentsContainer.setVisibility(View.GONE);
-            //mAppBarBehaviour.setDragCallback(null);
-            mFab.show();
+            mCommentsView.setElasticListener(this::dismissComments);
         } else {
             finish();
         }
@@ -297,5 +271,38 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mCommentsList.setLayoutManager(new LinearLayoutManager(this));
         mCommentsList.addItemDecoration(new SimpleListItemDivider(this));
         mCommentsList.setAdapter(new CommentsAdapter(comments));
+
+        //
+        mCommentsView.setElasticListener(this::dismissComments);
+
+        mFab.setOnClickListener(view -> {
+
+            if (mIsTitleVisible)
+                mCommentsView.setPadding(0, mToolbar.getHeight() + 25, 0, 0);
+            else
+                mCommentsView.setPadding(0, 0, 0, 0);
+
+            mCommentsContainer.setVisibility(View.VISIBLE);
+            mFab.hide();
+
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+            mAppBarBehaviour = (AppBarLayout.Behavior) params.getBehavior();
+
+            mAppBarBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+
+                @Override
+                public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                    return false;
+                }
+            });
+
+        });
+    }
+
+    @Override
+    public void dismissComments() {
+        mCommentsContainer.setVisibility(View.GONE);
+        mFab.show();
+        mCommentsView.resetView();
     }
 }

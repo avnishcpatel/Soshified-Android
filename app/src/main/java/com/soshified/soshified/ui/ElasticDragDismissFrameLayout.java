@@ -126,13 +126,21 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
         }
     }
 
-    public void addListener(ElasticDragDismissListener listener) {
+    public void setElasticListener(ElasticDragDismissListener listener) {
 
         this.listener = listener;
     }
 
     public void removeListener() {
         this.listener = null;
+    }
+
+    public void resetView() {
+        totalDrag = 0;
+        draggingDown = draggingUp = false;
+        setTranslationY(0f);
+        setScaleX(1f);
+        setScaleY(1f);
     }
 
     private void dragScale(int scroll) {
@@ -172,13 +180,8 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
 
         // if we've reversed direction and gone past the settle point then clear the flags to
         // allow the list to get the scroll events & reset any transforms
-        if ((draggingDown && totalDrag >= 0)
-                || (draggingUp && totalDrag <= 0)) {
-            totalDrag = 0;
-            draggingDown = draggingUp = false;
-            setTranslationY(0f);
-            setScaleX(1f);
-            setScaleY(1f);
+        if ((draggingDown && totalDrag >= 0) || (draggingUp && totalDrag <= 0)) {
+            resetView();
         }
     }
 
