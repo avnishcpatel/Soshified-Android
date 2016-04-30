@@ -197,6 +197,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
     @Override
     public void setupScroll() {
+
         // Hides/Shows toolbar title depending on scroll amount
         // Also changes the Alpha of the blurred background to give a nice effect
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {

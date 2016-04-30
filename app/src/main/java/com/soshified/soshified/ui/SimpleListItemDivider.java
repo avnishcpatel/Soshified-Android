@@ -10,7 +10,8 @@ import android.view.View;
 import com.soshified.soshified.R;
 
 /**
- * Created by david on 4/29/16.
+ * An ItemDecoration that adds a simple line between each item because RecyclerView doesn't have
+ * it natively.
  */
 public class SimpleListItemDivider extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
