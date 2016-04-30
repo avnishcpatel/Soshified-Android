@@ -1,35 +1,21 @@
 package com.soshified.soshified.util;
 
-/*
- * Copyright 2015 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
-import android.transition.Transition;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Interpolator;
+
+import io.codetail.animation.SupportAnimator;
 
 /**
  * Utility methods for working with animations.
@@ -64,6 +50,51 @@ public class AnimUtils {
                 .setInterpolator(interpolator)
                 .start();
 
+    }
+
+    public static void circularReveal(View view, boolean reverse) {
+        int x = view.getRight();
+        int y = view.getBottom();
+
+        float radius = (float) Math.hypot(x, y);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Animator animator;
+            if (!reverse) {
+                animator = ViewAnimationUtils.createCircularReveal(view, x, y, 9, radius);
+                view.setVisibility(View.VISIBLE);
+            } else {
+                animator = ViewAnimationUtils.createCircularReveal(view, x, y, radius, 0);
+                animator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        view.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+            animator.setDuration(400);
+            animator.start();
+        } else {
+            SupportAnimator animator;
+            if(!reverse) {
+                animator = io.codetail.animation.ViewAnimationUtils
+                        .createCircularReveal(view, x, y, 0, radius);
+                view.setVisibility(View.VISIBLE);
+            } else {
+                animator = io.codetail.animation.ViewAnimationUtils
+                        .createCircularReveal(view, x, y, radius, 0);
+                animator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        view.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+            animator.setDuration(400);
+            animator.start();
+        }
     }
 
     /**
@@ -111,35 +142,6 @@ public class AnimUtils {
 
         return new BitmapDrawable(context.getResources(), finalBitmap);
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static class TransitionListenerAdapter implements Transition.TransitionListener {
-
-        @Override
-        public void onTransitionStart(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
     }
 
 }

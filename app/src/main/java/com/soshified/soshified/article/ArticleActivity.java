@@ -1,7 +1,6 @@
 package com.soshified.soshified.article;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -18,9 +17,11 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.animation.AnimatorListenerAdapter;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.webkit.WebView;
@@ -49,7 +50,6 @@ import butterknife.ButterKnife;
 public class ArticleActivity extends AppCompatActivity implements ArticleContract.View {
 
     private boolean mIsTitleVisible = false;
-    private boolean mEnterComplete = false;
 
     private ArticleContract.Presenter articlePresenter;
     private AppBarLayout.Behavior mAppBarBehaviour;
@@ -119,7 +119,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     @Override
     public void onBackPressed() {
         if (mCommentsContainer.getVisibility() == View.VISIBLE) {
-            dismissComments();
+            dismissComments(false);
         } else {
             super.onBackPressed();
             mScrollView.setAlpha(1f);
@@ -149,8 +149,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
         offset *= 1.5f;
         AnimUtils.doSimpleYAnimation(mWebView, offset, interpolator);
-
-        mEnterComplete = true;
     }
 
     @Override
@@ -255,7 +253,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mCommentsList.setAdapter(new CommentsAdapter(comments));
 
         // Dismiss the comments view when the drag threshold is reached
-        mCommentsView.setElasticListener(this::dismissComments);
+        mCommentsView.setElasticListener(() -> dismissComments(true));
 
         mFab.setOnClickListener(view -> {
 
@@ -264,7 +262,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
             else
                 mCommentsView.setPadding(0, 0, 0, 0);
 
-            mCommentsContainer.setVisibility(View.VISIBLE);
+            AnimUtils.circularReveal(mCommentsContainer, false);
             mFab.hide();
 
             // Prevent the content view being scrolled underneath the comments
@@ -283,8 +281,14 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     }
 
     @Override
-    public void dismissComments() {
-        mCommentsContainer.setVisibility(View.GONE);
+    public void dismissComments(boolean wasSwiped) {
+        if (wasSwiped){
+            Animation animation = new AlphaAnimation(1f, 0f);
+            animation.setDuration(200);
+            mCommentsContainer.startAnimation(animation);
+            mCommentsContainer.setVisibility(View.INVISIBLE);
+        } else
+            AnimUtils.circularReveal(mCommentsContainer, true);
         mFab.show();
         mCommentsView.resetView();
     }

@@ -31,7 +31,7 @@ public class ArticleContract {
 
         void loadComments(ArrayList<Comment> comments);
 
-        void dismissComments();
+        void dismissComments(boolean wasSwiped);
 
     }
 
