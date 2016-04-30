@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.animation.AnimatorListenerAdapter;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.webkit.WebView;
@@ -268,12 +267,11 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
             // Prevent the content view being scrolled underneath the comments
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
             mAppBarBehaviour = (AppBarLayout.Behavior) params.getBehavior();
-
             mAppBarBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
 
                 @Override
                 public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                    return false;
+                    return mCommentsContainer.getVisibility() != View.VISIBLE;
                 }
             });
 

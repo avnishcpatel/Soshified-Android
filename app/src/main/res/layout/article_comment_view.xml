@@ -17,7 +17,7 @@
             android:id="@+id/comments_container"
             android:layout_width="match_parent"
             android:layout_margin="16dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_height="match_parent"
             app:cardCornerRadius="2dp">
 
