@@ -26,13 +26,12 @@ public class ArticlePresenter implements Presenter {
 
         mView.setupToolbar();
         mView.loadPostContent(article.getPostContent());
+        mView.loadHeaderImage(article.getThumbnail());
+        mView.loadComments(article.getComments());
 
         String mTitle = TextUtils.fromHtml(article.getTitle());
         String mDate = DateUtils.parseWordPressFormat(article.getDate());
         mView.loadPostMeta(mTitle, article.getAuthorName(), mDate);
 
-        mView.loadHeaderImage(article.getThumbnail());
-
-        mView.loadComments(article.getComments());
     }
 }

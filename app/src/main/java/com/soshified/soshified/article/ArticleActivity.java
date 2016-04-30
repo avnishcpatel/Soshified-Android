@@ -79,6 +79,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
         ButterKnife.bind(this);
 
+        // Shared Element Transition
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Transition.TransitionListener returnHomeListener = new AnimUtils.TransitionListenerAdapter(){
 
@@ -130,7 +131,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     @Override
     public void onBackPressed() {
         if (mCommentsContainer.getVisibility() == View.VISIBLE) {
-            mCommentsView.setElasticListener(this::dismissComments);
+            dismissComments();
         } else {
             finish();
         }
@@ -169,7 +170,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
     @Override
     public void loadHeaderImage(String imageUrl) {
-
         Picasso.with(this)
                 .load(TextUtils.validateImageUrl(imageUrl))
                 .error(R.color.primary)
@@ -182,7 +182,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
                         boolean supportRC = false;
 
-                        //Native RenderScript only supports 17+
+                        // Native RenderScript only supports 17+
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN)
                             supportRC = true;
 
@@ -192,7 +192,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
                             mBlurredBackdrop.setBackground(mBlurredBitmap);
                         }
 
-                        //Alter the Status Bar if using Lollipop or higher
+                        // Alter the Status Bar if using Lollipop or higher
                         if (Build.VERSION.SDK_INT >= 21) {
                             getWindow().setStatusBarColor(Color.argb(75, 0, 0, 0));
                         }
@@ -207,9 +207,10 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
     @Override
     public void setupToolbar() {
+        // Hides/Shows toolbar title depending on scroll amount
+        // Also changes the Alpha of the blurred background to give a nice effect
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
 
-            //Hides/Shows toolbar title depending on scroll amount
             float percentage = (float) Math.abs(verticalOffset) /
                     (float) appBarLayout.getTotalScrollRange();
 
@@ -250,7 +251,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
                 super.onPageFinished(view, url);
                 mProgressBar.setVisibility(View.GONE);
                 animate();
-
             }
         });
     }
@@ -260,7 +260,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mTitle.setText(title);
         mSubTitle.setText(TextUtils.formatStringRes(ArticleActivity.this,
                 R.string.post_subtitle, new String[]{author, date}));
-
 
         String postTitle = TextUtils.fromHtml(title);
         mToolbarTitle.setText(postTitle);
@@ -272,7 +271,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mCommentsList.addItemDecoration(new SimpleListItemDivider(this));
         mCommentsList.setAdapter(new CommentsAdapter(comments));
 
-        //
+        // Dismiss the comments view when the drag threshold is reached
         mCommentsView.setElasticListener(this::dismissComments);
 
         mFab.setOnClickListener(view -> {
@@ -285,6 +284,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
             mCommentsContainer.setVisibility(View.VISIBLE);
             mFab.hide();
 
+            // Prevent the content view being scrolled underneath the comments
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
             mAppBarBehaviour = (AppBarLayout.Behavior) params.getBehavior();
 
