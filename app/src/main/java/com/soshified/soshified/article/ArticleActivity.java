@@ -70,6 +70,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     @Bind(R.id.comments_draggable_view) ElasticDragDismissFrameLayout mCommentsView;
     @Bind(R.id.comments_container) CardView mCommentsContainer;
     @Bind(R.id.comments_list) RecyclerView mCommentsList;
+    @Bind(R.id.comments_count) TextView mCommentsCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -250,6 +251,9 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mCommentsList.setLayoutManager(new LinearLayoutManager(this));
         mCommentsList.addItemDecoration(new SimpleListItemDivider(this));
         mCommentsList.setAdapter(new CommentsAdapter(comments));
+
+        String plural = comments.size() == 1 ? "" : "s";
+        mCommentsCount.setText(String.format(getString(R.string.comment_count), comments.size(), plural));
 
         // Dismiss the comments view when the drag threshold is reached
         mCommentsView.setElasticListener(() -> dismissComments(true));
