@@ -58,7 +58,13 @@ public class ArticlesActivity extends AppCompatActivity {
     private void setupDrawer() {
         mNavigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                //TODO Do stuff
+                case R.id.navigation_item_news:
+                    mCurrentType = ARTICLE_TYPE_NEWS;
+                    break;
+                case R.id.navigation_item_style:
+                    mCurrentType = ARTICLE_TYPE_STYLE;
+                    break;
+
             }
             changeFragment(mCurrentType);
             item.setChecked(true);
