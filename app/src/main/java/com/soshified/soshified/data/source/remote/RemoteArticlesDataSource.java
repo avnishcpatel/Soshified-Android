@@ -8,7 +8,6 @@ import com.soshified.soshified.data.source.ArticlesRepository;
 
 import java.util.List;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -68,10 +67,6 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Article.class, new ArticleDeserializer())
                 .create();
-
-        OkHttpClient client = new OkHttpClient.Builder()
-                .followSslRedirects(true)
-                .build();
 
         Retrofit mRestAdapter = new Retrofit.Builder()
                 .baseUrl(jsonEndpoint)
