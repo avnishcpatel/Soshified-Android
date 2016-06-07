@@ -2,7 +2,6 @@ package com.soshified.soshified.articles;
 
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.local.RealmArticle;
-import com.soshified.soshified.util.DateUtils;
 
 import io.realm.Realm;
 import rx.Observable;
