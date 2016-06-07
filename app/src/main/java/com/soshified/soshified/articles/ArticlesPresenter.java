@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Presenter Implementation to deal with all the 'presenter' stuff for ArticleListView
  */
-public class ArticlesPresenter implements ArticlesContract.Presenter {
+class ArticlesPresenter implements ArticlesContract.Presenter {
 
     private int mLastRequestedPage = 1;
     private CompositeSubscription mSubscriptions;
@@ -24,7 +24,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     private final ArticlesContract.View mArticlesView;
     private final ArticlesRepository mArticlesRepository;
 
-    public ArticlesPresenter(ArticlesRepository articlesRepository, ArticlesContract.View articleListView) {
+    ArticlesPresenter(ArticlesRepository articlesRepository, ArticlesContract.View articleListView) {
         this.mArticlesRepository = checkNotNull(articlesRepository);
         this.mArticlesView = checkNotNull(articleListView);
         this.mArticlesView.setPresenter(this);
