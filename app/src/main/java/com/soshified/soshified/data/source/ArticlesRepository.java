@@ -1,13 +1,15 @@
 package com.soshified.soshified.data.source;
 
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 
 import com.soshified.soshified.data.Article;
 
-import java.util.HashMap;
 import java.util.List;
 
 import rx.Observable;
+
+import static com.soshified.soshified.util.ArrayUtils.asList;
 
 /**
  * Implementation that loads articles from either Soshified Servers or a local database.
@@ -25,7 +27,7 @@ public class ArticlesRepository implements ArticlesDataSource {
     public static final int ARTICLE_TYPE_SUBS = 2;
 
 
-    private HashMap<Integer, Article> mCachedArticles = new HashMap<>();
+    private SparseArray<Article> mCachedArticles = new SparseArray<>();
 
     private boolean mCacheIsValid = true;
 
@@ -49,7 +51,7 @@ public class ArticlesRepository implements ArticlesDataSource {
 
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
-        Observable<List<Article>> cachedArticles = Observable.from(mCachedArticles.values()).toList();
+        Observable<List<Article>> cachedArticles = Observable.from(asList(mCachedArticles)).toList();
         Observable<List<Article>> remoteArticles = mRemoteDataSource.getPageObservable(page);
         Observable<List<Article>> localArticles = mLocalDataSource.getPageObservable(page);
 
