@@ -32,7 +32,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
     }
 
     @Override
-    public void init(int type) {
+    public void init() {
         mArticlesView.setupRecyclerView();
         mArticlesView.setupToolBar();
     }

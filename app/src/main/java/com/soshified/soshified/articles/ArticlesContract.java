@@ -13,7 +13,7 @@ public class ArticlesContract {
 
     public interface Presenter {
 
-        void init(int type);
+        void init();
 
         void subscribe();
 
