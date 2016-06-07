@@ -94,6 +94,7 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
     @Override
     public void setSource(int source) {
         mArticlesRepository.setSource(source);
+        mLastRequestedPage = 1;
     }
 
     @Override
