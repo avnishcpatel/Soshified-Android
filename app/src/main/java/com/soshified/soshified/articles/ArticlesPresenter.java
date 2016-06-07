@@ -8,6 +8,7 @@ import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -76,6 +77,7 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
         }
 
         Subscription articleSubscription = mArticlesRepository.getPageObservable(mLastRequestedPage)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(articles -> {
                     mLastRequestedPage += 1;
