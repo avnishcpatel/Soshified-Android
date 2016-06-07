@@ -253,7 +253,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mCommentsList.setAdapter(new CommentsAdapter(comments));
 
         String plural = comments.size() == 1 ? "" : "s";
-        mCommentsCount.setText(String.format(getString(R.string.comment_count), comments.size(), plural));
+        mCommentsCount.setText(String.format(getString(R.string.comment_count), String.valueOf(comments.size()), plural));
 
         // Dismiss the comments view when the drag threshold is reached
         mCommentsView.setElasticListener(() -> dismissComments(true));
