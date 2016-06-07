@@ -73,6 +73,11 @@ public class ArticlesRepository implements ArticlesDataSource {
     public void saveArticle(Article article) {
         mCachedArticles.put(article.getId(), article);
         mLocalDataSource.saveArticle(article);
+    @Override
+    public void setSource(int source) {
+        invalidateCache();
+        mRemoteDataSource.setSource(source);
+        mLocalDataSource.setSource(source);
     }
 
     @Override

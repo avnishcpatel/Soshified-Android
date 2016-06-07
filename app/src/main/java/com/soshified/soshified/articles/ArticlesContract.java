@@ -23,6 +23,7 @@ public class ArticlesContract {
 
         void fetchNewPage(boolean forceReload);
 
+        void setSource(int source);
     }
 
     public interface View {

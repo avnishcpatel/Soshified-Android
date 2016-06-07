@@ -22,13 +22,9 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
 
     private static LocalArticlesDataSource INSTANCE;
 
-    private LocalArticlesDataSource(int type){
-
-    }
-
-    public static LocalArticlesDataSource getInstance(int type) {
+    public static LocalArticlesDataSource getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new LocalArticlesDataSource(type);
+            INSTANCE = new LocalArticlesDataSource();
         return INSTANCE;
     }
 
@@ -51,6 +47,11 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
             RealmArticle realmArticle = new RealmArticle().copyArticle(article);
             realm.copyToRealmOrUpdate(realmArticle);
         });
+    }
+
+    @Override
+    public void setSource(int source) {
+
     }
 
     @Override

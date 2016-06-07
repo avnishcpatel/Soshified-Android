@@ -89,4 +89,9 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
         mSubscriptions.add(articleSubscription);
 
     }
+
+    @Override
+    public void setSource(int source) {
+        mArticlesRepository.setSource(source);
+    }
 }
