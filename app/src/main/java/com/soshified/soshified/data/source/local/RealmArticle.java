@@ -18,9 +18,10 @@ public class RealmArticle extends RealmObject{
     private String title, content, thumbnail, authorName, comment_status;
     private long postDate;
     private RealmList<RealmComment> comments;
+    private int type;
     @PrimaryKey private int id;
 
-    public RealmArticle copyArticle(Article article) {
+    RealmArticle copyArticle(Article article) {
         id = article.getId();
         title = article.getTitle();
         postDate = article.getDate();
@@ -32,6 +33,14 @@ public class RealmArticle extends RealmObject{
                 .map(comment -> new RealmComment().copyComment(comment))
                 .forEach(realmComment -> comments.add(realmComment));
         return this;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public RealmList<RealmComment> getComments() {
