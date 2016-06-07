@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Contract between view and presenter
  */
-public class ArticlesContract {
+class ArticlesContract {
 
-    public interface Presenter {
+    interface Presenter {
 
         void init();
 
@@ -26,7 +26,7 @@ public class ArticlesContract {
         void setSource(int source);
     }
 
-    public interface View {
+    interface View {
 
         void setPresenter(@NonNull Presenter presenter);
 
