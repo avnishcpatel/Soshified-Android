@@ -81,7 +81,7 @@ public class ArticlesFragment extends Fragment implements ArticlesContract.View 
                     ContextCompat.getColor(getActivity(), R.color.primary)));
         }
 
-        mPresenter.init(ArticlesRepository.ARTICLE_TYPE_NEWS);
+        mPresenter.init();
 
         return view;
     }
