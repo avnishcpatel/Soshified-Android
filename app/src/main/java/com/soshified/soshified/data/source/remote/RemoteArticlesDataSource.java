@@ -27,13 +27,13 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
         String jsonEndpoint;
         switch (type) {
             case ArticlesRepository.ARTICLE_TYPE_NEWS:
-                jsonEndpoint = "http://soshified.com/json";
+                jsonEndpoint = "https://soshified.com/json";
                 break;
             case ArticlesRepository.ARTICLE_TYPE_STYLE:
-                jsonEndpoint = "whatever the style url is";
+                jsonEndpoint = "http://style.soshified.com/json";
                 break;
             case ArticlesRepository.ARTICLE_TYPE_SUBS:
-                jsonEndpoint = "whatever the subs endpoint is";
+                jsonEndpoint = "http://soshisubs.com/json";
                 break;
             default:
                 jsonEndpoint = "http://soshified.com/json";
