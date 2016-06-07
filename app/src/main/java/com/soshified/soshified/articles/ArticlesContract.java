@@ -24,6 +24,9 @@ class ArticlesContract {
         void fetchNewPage(boolean forceReload);
 
         void setSource(int source);
+
+        void setView(View view);
+
     }
 
     interface View {

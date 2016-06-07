@@ -22,13 +22,13 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
     private boolean mfirstLaunch = true;
 
     private final ArticlesContract.View mArticlesView;
+    private ArticlesContract.View mArticlesView;
     private final ArticlesRepository mArticlesRepository;
 
     ArticlesPresenter(ArticlesRepository articlesRepository, ArticlesContract.View articleListView) {
         this.mArticlesRepository = checkNotNull(articlesRepository);
-        this.mArticlesView = checkNotNull(articleListView);
-        this.mArticlesView.setPresenter(this);
         this.mSubscriptions = new CompositeSubscription();
+        setView(articleListView);
     }
 
     @Override
@@ -94,5 +94,11 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
     @Override
     public void setSource(int source) {
         mArticlesRepository.setSource(source);
+    }
+
+    @Override
+    public void setView(ArticlesContract.View view) {
+        mArticlesView = checkNotNull(view);
+        mArticlesView.setPresenter(this);
     }
 }
