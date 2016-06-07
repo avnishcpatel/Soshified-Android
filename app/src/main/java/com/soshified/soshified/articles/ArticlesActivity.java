@@ -82,7 +82,7 @@ public class ArticlesActivity extends AppCompatActivity {
         if (articlesFragment == null) {
             articlesFragment = ArticlesFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, articlesFragment, String.valueOf(source))
+                    .replace(R.id.fragment_container, articlesFragment, String.valueOf(source))
                     .addToBackStack(String.valueOf(source))
                     .commit();
         }
