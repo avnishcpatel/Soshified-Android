@@ -53,6 +53,7 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
 
         mArticlesRepository.invalidateCache();
         mArticlesRepository.getPageObservable(1)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
                 .take(10)
