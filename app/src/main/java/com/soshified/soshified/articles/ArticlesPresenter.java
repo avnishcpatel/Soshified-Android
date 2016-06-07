@@ -21,7 +21,6 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
     private CompositeSubscription mSubscriptions;
     private boolean mfirstLaunch = true;
 
-    private final ArticlesContract.View mArticlesView;
     private ArticlesContract.View mArticlesView;
     private final ArticlesRepository mArticlesRepository;
 
