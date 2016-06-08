@@ -17,5 +17,7 @@ public interface ArticlesDataSource {
 
     void saveArticle(Article article);
 
+    void setSource(int source);
+
 
 }

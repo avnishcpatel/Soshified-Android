@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_1"
+            android:id="@+id/navigation_item_news"
             android:checked="true"
             android:icon="@mipmap/ic_launcher"
             android:title="@string/news_title"/>
         <item
-            android:id="@+id/navigation_item_2"
+            android:id="@+id/navigation_item_style"
             android:icon="@mipmap/ic_launcher"
             android:title="@string/news_style"/>
     </group>

@@ -15,13 +15,18 @@ import com.soshified.soshified.data.source.remote.RemoteArticlesDataSource;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.soshified.soshified.data.source.ArticlesRepository.ARTICLE_TYPE_NEWS;
+import static com.soshified.soshified.data.source.ArticlesRepository.ARTICLE_TYPE_STYLE;
+import static com.soshified.soshified.data.source.ArticlesRepository.ARTICLE_TYPE_SUBS;
+
 public class ArticlesActivity extends AppCompatActivity {
 
     @Bind(R.id.main_navigation_drawer)  DrawerLayout mDrawerLayout;
     @Bind(R.id.main_navigation_view) NavigationView mNavigationView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
 
-    private int mCurrentType = ArticlesRepository.ARTICLE_TYPE_NEWS;
+    private int mCurrentType = ARTICLE_TYPE_NEWS;
+    private static ArticlesPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,33 +51,50 @@ public class ArticlesActivity extends AppCompatActivity {
             setupDrawer();
         }
 
-        // Add Fragment
-        ArticlesFragment articlesFragment = (ArticlesFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_container);
-
-        if (articlesFragment == null) {
-            articlesFragment = ArticlesFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, articlesFragment)
-                    .commit();
-        }
-
-        ArticlesRepository articlesRepository =
-                ArticlesRepository.getInstance(RemoteArticlesDataSource.getInstance(mCurrentType),
-                        LocalArticlesDataSource.getInstance(mCurrentType));
-
-        new ArticlesPresenter(articlesRepository, articlesFragment);
+        //TODO Get default type from shared prefs
+        changeFragment(ARTICLE_TYPE_NEWS);
     }
 
     private void setupDrawer() {
         mNavigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                //TODO Do stuff
+                case R.id.navigation_item_news:
+                    mCurrentType = ARTICLE_TYPE_NEWS;
+                    break;
+                case R.id.navigation_item_style:
+                    mCurrentType = ARTICLE_TYPE_STYLE;
+                    break;
+
             }
+            changeFragment(mCurrentType);
             item.setChecked(true);
             mDrawerLayout.closeDrawers();
             return false;
         });
+    }
+
+    private void changeFragment(int source) {
+
+        // Add Fragment
+        ArticlesFragment articlesFragment = (ArticlesFragment) getSupportFragmentManager()
+                .findFragmentByTag(String.valueOf(source));
+
+        if (articlesFragment == null) {
+            articlesFragment = ArticlesFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, articlesFragment, String.valueOf(source))
+                    .commit();
+        }
+
+        if(mPresenter == null) {
+            ArticlesRepository articlesRepository = ArticlesRepository.getInstance(
+                    RemoteArticlesDataSource.getInstance(), LocalArticlesDataSource.getInstance());
+
+            mPresenter = new ArticlesPresenter(articlesRepository, articlesFragment);
+        } else {
+            mPresenter.setView(articlesFragment);
+        }
+        mPresenter.setSource(source);
     }
 
 }

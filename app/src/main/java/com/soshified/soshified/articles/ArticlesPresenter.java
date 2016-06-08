@@ -2,12 +2,12 @@ package com.soshified.soshified.articles;
 
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.local.RealmArticle;
-import com.soshified.soshified.util.DateUtils;
 
 import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,24 +15,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Presenter Implementation to deal with all the 'presenter' stuff for ArticleListView
  */
-public class ArticlesPresenter implements ArticlesContract.Presenter {
+class ArticlesPresenter implements ArticlesContract.Presenter {
 
     private int mLastRequestedPage = 1;
     private CompositeSubscription mSubscriptions;
     private boolean mfirstLaunch = true;
 
-    private final ArticlesContract.View mArticlesView;
+    private ArticlesContract.View mArticlesView;
     private final ArticlesRepository mArticlesRepository;
 
-    public ArticlesPresenter(ArticlesRepository articlesRepository, ArticlesContract.View articleListView) {
+    ArticlesPresenter(ArticlesRepository articlesRepository, ArticlesContract.View articleListView) {
         this.mArticlesRepository = checkNotNull(articlesRepository);
-        this.mArticlesView = checkNotNull(articleListView);
-        this.mArticlesView.setPresenter(this);
         this.mSubscriptions = new CompositeSubscription();
+        setView(articleListView);
     }
 
     @Override
-    public void init(int type) {
+    public void init() {
         mArticlesView.setupRecyclerView();
         mArticlesView.setupToolBar();
     }
@@ -54,6 +53,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
 
         mArticlesRepository.invalidateCache();
         mArticlesRepository.getPageObservable(1)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
                 .take(10)
@@ -76,6 +76,7 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
         }
 
         Subscription articleSubscription = mArticlesRepository.getPageObservable(mLastRequestedPage)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(articles -> {
                     mLastRequestedPage += 1;
@@ -88,5 +89,17 @@ public class ArticlesPresenter implements ArticlesContract.Presenter {
 
         mSubscriptions.add(articleSubscription);
 
+    }
+
+    @Override
+    public void setSource(int source) {
+        mArticlesRepository.setSource(source);
+        mLastRequestedPage = 1;
+    }
+
+    @Override
+    public void setView(ArticlesContract.View view) {
+        mArticlesView = checkNotNull(view);
+        mArticlesView.setPresenter(this);
     }
 }

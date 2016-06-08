@@ -9,11 +9,11 @@ import java.util.List;
 /**
  * Contract between view and presenter
  */
-public class ArticlesContract {
+class ArticlesContract {
 
-    public interface Presenter {
+    interface Presenter {
 
-        void init(int type);
+        void init();
 
         void subscribe();
 
@@ -23,9 +23,13 @@ public class ArticlesContract {
 
         void fetchNewPage(boolean forceReload);
 
+        void setSource(int source);
+
+        void setView(View view);
+
     }
 
-    public interface View {
+    interface View {
 
         void setPresenter(@NonNull Presenter presenter);
 

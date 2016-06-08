@@ -8,10 +8,11 @@ import com.soshified.soshified.data.source.ArticlesRepository;
 
 import java.util.List;
 
-import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -23,39 +24,9 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
 
     private static ArticlesRequest request;
 
-    private RemoteArticlesDataSource(int type){
-        String jsonEndpoint;
-        switch (type) {
-            case ArticlesRepository.ARTICLE_TYPE_NEWS:
-                jsonEndpoint = "https://soshified.com/json";
-                break;
-            case ArticlesRepository.ARTICLE_TYPE_STYLE:
-                jsonEndpoint = "http://style.soshified.com/json";
-                break;
-            case ArticlesRepository.ARTICLE_TYPE_SUBS:
-                jsonEndpoint = "http://soshisubs.com/json";
-                break;
-            default:
-                jsonEndpoint = "http://soshified.com/json";
-                break;
-        }
-
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Article.class, new ArticleDeserializer())
-                .create();
-
-        RestAdapter mRestAdapter = new RestAdapter.Builder()
-                .setEndpoint(jsonEndpoint)
-                .setConverter(new GsonConverter(gson))
-                .build();
-
-        request = mRestAdapter.create(ArticlesRequest.class);
-
-    }
-
-    public static RemoteArticlesDataSource getInstance(int type) {
+    public static RemoteArticlesDataSource getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RemoteArticlesDataSource(type);
+            INSTANCE = new RemoteArticlesDataSource();
         return INSTANCE;
     }
 
@@ -75,6 +46,37 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
 
     }
 
+    @Override
+    public void setSource(int source) {
+        String jsonEndpoint;
+        switch (source) {
+            case ArticlesRepository.ARTICLE_TYPE_NEWS:
+                jsonEndpoint = "https://soshified.com/json/";
+                break;
+            case ArticlesRepository.ARTICLE_TYPE_STYLE:
+                jsonEndpoint = "http://style.soshified.com/json/";
+                break;
+            case ArticlesRepository.ARTICLE_TYPE_SUBS:
+                jsonEndpoint = "http://soshisubs.com/json/";
+                break;
+            default:
+                jsonEndpoint = "http://soshified.com/json/";
+                break;
+        }
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Article.class, new ArticleDeserializer())
+                .create();
+
+        Retrofit mRestAdapter = new Retrofit.Builder()
+                .baseUrl(jsonEndpoint)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+        request = mRestAdapter.create(ArticlesRequest.class);
+    }
+
     //TODO Implement
     @Override
     public Observable<Article> getArticleObservable(int id) {
@@ -86,7 +88,7 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
      */
     private interface ArticlesRequest {
 
-        @GET("/get_posts?count=25")
+        @GET("get_posts?count=25")
         Observable<Articles> getPage(@Query("page") int page);
 
         class Articles {

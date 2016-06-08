@@ -1,18 +1,14 @@
 package com.soshified.soshified.data.source.local;
 
-import android.util.Log;
-
 import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesDataSource;
 
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Implementation of ArticlesDataSource that retrieves articles from the a local DB.
@@ -21,20 +17,18 @@ import rx.functions.Func1;
 public class LocalArticlesDataSource implements ArticlesDataSource {
 
     private static LocalArticlesDataSource INSTANCE;
+    private static int mType;
 
-    private LocalArticlesDataSource(int type){
-
-    }
-
-    public static LocalArticlesDataSource getInstance(int type) {
+    public static LocalArticlesDataSource getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new LocalArticlesDataSource(type);
+            INSTANCE = new LocalArticlesDataSource();
         return INSTANCE;
     }
 
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
         return Realm.getDefaultInstance().where(RealmArticle.class)
+                .equalTo("type", mType)
                 .findAllSortedAsync("postDate", Sort.DESCENDING).asObservable()
                 .filter(RealmResults::isLoaded)
                 .flatMap(Observable::from)
@@ -49,8 +43,14 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
     public void saveArticle(Article article) {
         Realm.getDefaultInstance().executeTransaction(realm -> {
             RealmArticle realmArticle = new RealmArticle().copyArticle(article);
+            realmArticle.setType(mType);
             realm.copyToRealmOrUpdate(realmArticle);
         });
+    }
+
+    @Override
+    public void setSource(int source) {
+        mType = source;
     }
 
     @Override
