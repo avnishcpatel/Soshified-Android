@@ -28,7 +28,7 @@ public class LocalArticlesDataSource implements ArticlesDataSource {
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
         return Realm.getDefaultInstance().where(RealmArticle.class)
-                .equalTo("type", mType.name())
+                .equalTo("type", mType.ordinal())
                 .findAllSortedAsync("postDate", Sort.DESCENDING).asObservable()
                 .filter(RealmResults::isLoaded)
                 .flatMap(Observable::from)
