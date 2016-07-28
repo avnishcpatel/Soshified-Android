@@ -87,7 +87,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mCollapsingToolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setTitleEnabled(false);
 
-        int type = getIntent().getIntExtra("type", ArticlesRepository.ARTICLE_TYPE_NEWS);
+        int type = getIntent().getIntExtra("type", ArticlesRepository.Article_Type.News.ordinal());
         int articleID = getIntent().getIntExtra("article_id", 0);
 
         ArticlesRepository articlesRepository =

@@ -1,10 +1,7 @@
 package com.soshified.soshified.data;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.annimon.stream.function.Function;
 import com.soshified.soshified.data.source.local.RealmArticle;
-import com.soshified.soshified.data.source.local.RealmComment;
 
 import java.util.ArrayList;
 
@@ -18,7 +15,7 @@ public class Article {
     private int id;
     private ArrayList<Comment> comments;
 
-    public Article copyArticle(RealmArticle article) {
+    public Article(RealmArticle article) {
         id = article.getId();
         title = article.getTitle();
         postDate = article.getDate();
@@ -27,9 +24,9 @@ public class Article {
         authorName = article.getAuthorName();
         comments = new ArrayList<>();
         Stream.of(article.getComments())
-                .map(realmComment -> new Comment().copyComment(realmComment))
+                .map(realmComment -> new Comment(realmComment))
                 .forEach(comment -> comments.add(comment));
-        return this;
+
     }
 
     public ArrayList<Comment> getComments() {

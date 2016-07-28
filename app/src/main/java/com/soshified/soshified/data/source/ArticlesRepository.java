@@ -23,10 +23,8 @@ public class ArticlesRepository implements ArticlesDataSource {
     private ArticlesDataSource mRemoteDataSource;
     private ArticlesDataSource mLocalDataSource;
 
-    public static final int ARTICLE_TYPE_NEWS = 0;
-    public static final int ARTICLE_TYPE_STYLE = 1;
-    public static final int ARTICLE_TYPE_SUBS = 2;
-    private static int mCurrentType;
+
+    private static Article_Type mCurrentType;
 
     private static List<SparseArray<Article>> mCachedArticles = new LinkedList<>();
 
@@ -37,7 +35,7 @@ public class ArticlesRepository implements ArticlesDataSource {
         this.mLocalDataSource = localDataSource;
         this.mRemoteDataSource = remoteDataSource;
 
-        for (int i = 0; i < 3; i++) {
+        for (Article_Type t : Article_Type.values()) {
             mCachedArticles.add(new SparseArray<>());
         }
 
@@ -56,7 +54,7 @@ public class ArticlesRepository implements ArticlesDataSource {
 
     @Override
     public Observable<List<Article>> getPageObservable(int page) {
-        Observable<List<Article>> cachedArticles = Observable.from(asList(mCachedArticles.get(mCurrentType))).toList();
+        Observable<List<Article>> cachedArticles = Observable.from(asList(mCachedArticles.get(mCurrentType.ordinal()))).toList();
         Observable<List<Article>> remoteArticles = mRemoteDataSource.getPageObservable(page);
         Observable<List<Article>> localArticles = mLocalDataSource.getPageObservable(page);
 
@@ -76,21 +74,21 @@ public class ArticlesRepository implements ArticlesDataSource {
 
     @Override
     public void saveArticle(Article article) {
-        mCachedArticles.get(mCurrentType).put(article.getId(), article);
+        mCachedArticles.get(mCurrentType.ordinal()).put(article.getId(), article);
         mLocalDataSource.saveArticle(article);
     }
 
     @Override
-    public void setSource(int source) {
+    public void setSource(Article_Type sourceType) {
         invalidateCache();
-        mCurrentType = source;
-        mRemoteDataSource.setSource(source);
-        mLocalDataSource.setSource(source);
+        mCurrentType = sourceType;
+        mRemoteDataSource.setSource(sourceType);
+        mLocalDataSource.setSource(sourceType);
     }
 
     @Override
     public Observable<Article> getArticleObservable(int id) {
-        Observable<Article> cachedArticle = Observable.just(mCachedArticles.get(mCurrentType).get(id));
+        Observable<Article> cachedArticle = Observable.just(mCachedArticles.get(mCurrentType.ordinal()).get(id));
         Observable<Article> remoteArticle = mRemoteDataSource.getArticleObservable(id);
         Observable<Article> localArticle = mLocalDataSource.getArticleObservable(id);
 

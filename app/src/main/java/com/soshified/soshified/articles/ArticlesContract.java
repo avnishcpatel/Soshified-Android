@@ -3,6 +3,7 @@ package com.soshified.soshified.articles;
 import android.support.annotation.NonNull;
 
 import com.soshified.soshified.data.Article;
+import com.soshified.soshified.data.source.ArticlesDataSource;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ class ArticlesContract {
 
         void fetchNewPage(boolean forceReload);
 
-        void setSource(int source);
+        void setSource(ArticlesDataSource.Article_Type source);
 
         void setView(View view);
 

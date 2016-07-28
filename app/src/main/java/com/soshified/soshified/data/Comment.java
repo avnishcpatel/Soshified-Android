@@ -9,13 +9,12 @@ public class Comment {
     private int id, parent;
     private String name, content, date;
 
-    public Comment copyComment(RealmComment comment) {
+    public Comment(RealmComment comment) {
         id = comment.getId();
         parent = comment.getParent();
         name = comment.getName();
         content = comment.getContent();
         date = comment.getDate();
-        return this;
     }
 
     public int getId() {

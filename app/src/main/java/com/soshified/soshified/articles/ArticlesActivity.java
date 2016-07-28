@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.soshified.soshified.R;
+import com.soshified.soshified.data.source.ArticlesDataSource;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.local.LocalArticlesDataSource;
 import com.soshified.soshified.data.source.remote.RemoteArticlesDataSource;
@@ -15,9 +16,6 @@ import com.soshified.soshified.data.source.remote.RemoteArticlesDataSource;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.soshified.soshified.data.source.ArticlesRepository.ARTICLE_TYPE_NEWS;
-import static com.soshified.soshified.data.source.ArticlesRepository.ARTICLE_TYPE_STYLE;
-import static com.soshified.soshified.data.source.ArticlesRepository.ARTICLE_TYPE_SUBS;
 
 public class ArticlesActivity extends AppCompatActivity {
 
@@ -25,7 +23,7 @@ public class ArticlesActivity extends AppCompatActivity {
     @Bind(R.id.main_navigation_view) NavigationView mNavigationView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
 
-    private int mCurrentType = ARTICLE_TYPE_NEWS;
+    private ArticlesDataSource.Article_Type mCurrentType = ArticlesDataSource.Article_Type.News;
     private static ArticlesPresenter mPresenter;
 
     @Override
@@ -52,17 +50,17 @@ public class ArticlesActivity extends AppCompatActivity {
         }
 
         //TODO Get default type from shared prefs
-        changeFragment(ARTICLE_TYPE_NEWS);
+        changeFragment(ArticlesDataSource.Article_Type.News);
     }
 
     private void setupDrawer() {
         mNavigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_item_news:
-                    mCurrentType = ARTICLE_TYPE_NEWS;
+                    mCurrentType = ArticlesDataSource.Article_Type.News;
                     break;
                 case R.id.navigation_item_style:
-                    mCurrentType = ARTICLE_TYPE_STYLE;
+                    mCurrentType = ArticlesDataSource.Article_Type.Style;
                     break;
 
             }
@@ -73,7 +71,7 @@ public class ArticlesActivity extends AppCompatActivity {
         });
     }
 
-    private void changeFragment(int source) {
+    private void changeFragment(ArticlesDataSource.Article_Type source) {
 
         // Add Fragment
         ArticlesFragment articlesFragment = (ArticlesFragment) getSupportFragmentManager()

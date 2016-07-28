@@ -11,13 +11,15 @@ import rx.Observable;
  */
 public interface ArticlesDataSource {
 
+    enum Article_Type {News, Style, Subs}
+
     Observable<List<Article>> getPageObservable(int page);
 
     Observable<Article> getArticleObservable(int id);
 
     void saveArticle(Article article);
 
-    void setSource(int source);
+    void setSource(Article_Type sourceType);
 
 
 }

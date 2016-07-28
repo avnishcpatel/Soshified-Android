@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.soshified.soshified.data.Article;
 import com.soshified.soshified.data.source.ArticlesDataSource;
-import com.soshified.soshified.data.source.ArticlesRepository;
 
 import java.util.List;
 
@@ -47,16 +46,16 @@ public class RemoteArticlesDataSource implements ArticlesDataSource {
     }
 
     @Override
-    public void setSource(int source) {
+    public void setSource(Article_Type sourceType) {
         String jsonEndpoint;
-        switch (source) {
-            case ArticlesRepository.ARTICLE_TYPE_NEWS:
+        switch (sourceType) {
+            case News:
                 jsonEndpoint = "https://soshified.com/json/";
                 break;
-            case ArticlesRepository.ARTICLE_TYPE_STYLE:
+            case Style:
                 jsonEndpoint = "http://style.soshified.com/json/";
                 break;
-            case ArticlesRepository.ARTICLE_TYPE_SUBS:
+            case Subs:
                 jsonEndpoint = "http://soshisubs.com/json/";
                 break;
             default:
