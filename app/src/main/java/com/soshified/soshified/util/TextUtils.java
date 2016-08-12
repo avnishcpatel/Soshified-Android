@@ -12,6 +12,7 @@ public class TextUtils
 {
     public TextUtils() {}
 
+    @SuppressWarnings("deprecation")
     public static String fromHtml(String originalString)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
