@@ -29,8 +29,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * List adapter for the ArticleList. Handles all the layout stuff as well as
  * the Activity transitions
  */
-public class ArticlesAdapter extends RecyclerView.Adapter {
-
+public class ArticlesAdapter extends RecyclerView.Adapter
+{
     private static final int TYPE_ARTICLE = 0;
     private static final int TYPE_FOOTER = 1;
 
@@ -38,14 +38,17 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private ArticleClickListener mListener;
 
-    public ArticlesAdapter(Context context, ArticleClickListener listener) {
+    public ArticlesAdapter(Context context, ArticleClickListener listener)
+    {
         this.mContext = context;
         this.mListener = listener;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_FOOTER) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        if (viewType == TYPE_FOOTER)
+        {
             View footer = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.articles_list_progress_item, parent, false);
             return new ProgressViewHolder(footer);
@@ -57,47 +60,46 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if (getItemViewType(position) == TYPE_ARTICLE) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
+    {
+        switch (getItemViewType(position))
+        {
+            case TYPE_ARTICLE:
+                ArticleViewHolder holder = (ArticleViewHolder) viewHolder;
+                Article article = mArticles.get(position);
 
-            final ArticleViewHolder holder = (ArticleViewHolder) viewHolder;
-            final Article article = mArticles.get(position);
+                holder.mArticleTitle.setText(TextUtils.fromHtml(article.getTitle()));
 
-            holder.mArticleTitle.setText(Html.fromHtml(article.getTitle()));
+                holder.mArticleSubtitle.setText(TextUtils.formatStringRes(mContext,
+                        R.string.post_subtitle, new String[]{article.getAuthorName(),
+                                DateUtils.parseWordPressFormat(article.getDate())}));
 
-            holder.mArticleSubtitle.setText(TextUtils.formatStringRes(mContext,
-                    R.string.post_subtitle, new String[]{article.getAuthorName(),
-                            DateUtils.parseWordPressFormat(article.getDate())}));
+                Picasso.with(mContext)
+                        .load(TextUtils.validateImageUrl(article.getThumbnail()))
+                        .error(R.color.primary)
+                        .placeholder(R.color.primary_light)
+                        .into(holder.mArticleImage);
 
-            Picasso.with(mContext)
-                    .load(TextUtils.validateImageUrl(article.getThumbnail()))
-                    .error(R.color.primary)
-                    .placeholder(R.color.primary_light)
-                    .into(holder.mArticleImage);
+                holder.itemView.setOnClickListener(v -> {
+                    Pair<View, String> p1 = Pair.create((View) holder.mArticleImage, "articleImage");
 
-            holder.itemView.setOnClickListener(v -> {
-                Pair<View, String> p1 = Pair.create((View) holder.mArticleImage, "articleImage");
+                    mListener.onClick(article, p1);
+                });
+                break;
 
-                mListener.onClick(article, p1);
-            });
-        } else if (getItemViewType(position) == TYPE_FOOTER) {
-            ProgressViewHolder holder = (ProgressViewHolder) viewHolder;
-            if (position > 0) {
-                holder.mLoadingView.setVisibility(View.VISIBLE);
-            } else {
-                holder.mLoadingView.setVisibility(View.INVISIBLE);
-            }
+            case TYPE_FOOTER:
+                ProgressViewHolder _holder = (ProgressViewHolder) viewHolder;
+                _holder.mLoadingView.setVisibility((position > 0) ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
-    public void addPage(List<Article> articles) {
+    public void addPage(List<Article> articles)
+    {
         checkNotNull(articles);
         int currentCount = mArticles.size();
 
-        if (mArticles.size() == 0)
-            mArticles = articles;
-        else
-            mArticles.addAll(articles);
+        mArticles.addAll(articles);
+
         notifyItemRangeInserted(currentCount + 1, articles.size());
     }
 
@@ -110,11 +112,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
-            return TYPE_FOOTER;
-        }
-        return TYPE_ARTICLE;
+    public int getItemViewType(int position)
+    {
+        return (position == getItemCount() - 1) ? TYPE_FOOTER : TYPE_ARTICLE;
     }
 
     @Override
@@ -122,34 +122,39 @@ public class ArticlesAdapter extends RecyclerView.Adapter {
         return mArticles.size() + 1;
     }
 
-    public class ArticleViewHolder extends RecyclerView.ViewHolder {
+    public class ArticleViewHolder extends RecyclerView.ViewHolder
+    {
         @Bind(R.id.article_list_item_title) TextView mArticleTitle;
         @Bind(R.id.article_list_item_subtitle) TextView mArticleSubtitle;
         @Bind(R.id.article_list_item_image) ImageView mArticleImage;
 
         View itemView;
 
-        public ArticleViewHolder(View itemView) {
+        public ArticleViewHolder(View itemView)
+        {
             super(itemView);
             this.itemView = itemView;
             ButterKnife.bind(this, itemView);
         }
     }
 
-    public class ProgressViewHolder extends RecyclerView.ViewHolder {
+    public class ProgressViewHolder extends RecyclerView.ViewHolder
+    {
         @Bind(R.id.footer_loading_view)
         ProgressBar mLoadingView;
 
         View itemView;
 
-        public ProgressViewHolder(View itemView) {
+        public ProgressViewHolder(View itemView)
+        {
             super(itemView);
             this.itemView = itemView;
             ButterKnife.bind(this, itemView);
         }
     }
 
-    public interface ArticleClickListener {
+    public interface ArticleClickListener
+    {
         void onClick(Article article, Pair<View, String> transitionPair);
     }
 

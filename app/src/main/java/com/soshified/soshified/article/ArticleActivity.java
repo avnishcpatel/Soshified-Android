@@ -53,23 +53,37 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
     private ArticleContract.Presenter articlePresenter;
     private AppBarLayout.Behavior mAppBarBehaviour;
 
-    @Bind(R.id.article_view_toolbar)  Toolbar mToolbar;
+    @Bind(R.id.article_view_toolbar) Toolbar mToolbar;
+
     @Bind(R.id.article_view_appbar) AppBarLayout mAppBarLayout;
+
     @Bind(R.id.article_view_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
+
     @Bind(R.id.article_view_backdrop) ImageView mBackdrop;
+
     @Bind(R.id.article_view_backdrop_blur) ImageView mBlurredBackdrop;
+
     @Bind(R.id.article_view_title) TextView mTitle;
+
     @Bind(R.id.article_view_toolbar_title) TextView mToolbarTitle;
+
     @Bind(R.id.article_view_subtitle) TextView mSubTitle;
+
     @Bind(R.id.article_view_webView) WebView mWebView;
+
     @Bind(R.id.article_view_scrollView) NestedScrollView mScrollView;
+
     @Bind(R.id.article_view_progress) ProgressBar mProgressBar;
+
     @Bind(R.id.comments_fab) FloatingActionButton mFab;
 
     // Comments View
     @Bind(R.id.comments_draggable_view) ElasticDragDismissFrameLayout mCommentsView;
+
     @Bind(R.id.comments_container) CardView mCommentsContainer;
+
     @Bind(R.id.comments_list) RecyclerView mCommentsList;
+
     @Bind(R.id.comments_count) TextView mCommentsCount;
 
     @Override
@@ -87,7 +101,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
         mCollapsingToolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setTitleEnabled(false);
 
-        int type = getIntent().getIntExtra("type", ArticlesRepository.Article_Type.News.ordinal());
         int articleID = getIntent().getIntExtra("article_id", 0);
 
         ArticlesRepository articlesRepository =
@@ -131,7 +144,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
      * Animates the WebView by translating from the bottom.
      * Lollipop onwards only.
      */
-    private void animate(){
+    private void animate() {
         Interpolator interpolator;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             interpolator = AnimationUtils.loadInterpolator(this,
@@ -204,14 +217,14 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
                     (float) appBarLayout.getTotalScrollRange();
 
             mBlurredBackdrop.setAlpha(percentage);
-            if (percentage >= 0.9f){
+            if (percentage >= 0.9f) {
 
-                if(!mIsTitleVisible) {
+                if (!mIsTitleVisible) {
                     AnimUtils.startAlphaAnimation(mToolbarTitle, 200, View.VISIBLE);
                     mIsTitleVisible = true;
                 }
             } else {
-                if(mIsTitleVisible) {
+                if (mIsTitleVisible) {
                     AnimUtils.startAlphaAnimation(mToolbarTitle, 200, View.INVISIBLE);
                     mIsTitleVisible = false;
                 }
@@ -284,13 +297,14 @@ public class ArticleActivity extends AppCompatActivity implements ArticleContrac
 
     @Override
     public void dismissComments(boolean wasSwiped) {
-        if (wasSwiped){
+        if (wasSwiped) {
             Animation animation = new AlphaAnimation(1f, 0f);
             animation.setDuration(200);
             mCommentsContainer.startAnimation(animation);
             mCommentsContainer.setVisibility(View.INVISIBLE);
-        } else
+        } else {
             AnimUtils.circularReveal(mCommentsContainer, true);
+        }
         mFab.show();
         mCommentsView.resetView();
     }

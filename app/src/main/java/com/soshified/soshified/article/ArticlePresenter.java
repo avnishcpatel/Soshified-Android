@@ -13,7 +13,6 @@ public class ArticlePresenter implements Presenter {
 
     private View mView;
 
-
     public ArticlePresenter(ArticlesRepository articlesRepository, int articleID, View view) {
         mView = view;
         mView.setPresenter(this);

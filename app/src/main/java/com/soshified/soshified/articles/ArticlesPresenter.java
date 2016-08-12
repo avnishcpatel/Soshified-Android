@@ -1,5 +1,6 @@
 package com.soshified.soshified.articles;
 
+import com.soshified.soshified.data.source.ArticlesDataSource;
 import com.soshified.soshified.data.source.ArticlesRepository;
 import com.soshified.soshified.data.source.local.RealmArticle;
 
@@ -57,11 +58,8 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
                 .take(10)
-                .filter(article -> {
-                    long articleDate = article.getDate();
-                    return articleDate > mostRecentDate;
-                })
-                .finallyDo(() -> mArticlesView.setRefreshing(false))
+                .filter( article -> (article.getDate() > mostRecentDate) )
+                .doOnTerminate(() -> mArticlesView.setRefreshing(false))
                 .doOnError(throwable -> mArticlesView.setRefreshing(false))
                 .subscribe(mArticlesView::addNewArticle);
     }
@@ -92,7 +90,7 @@ class ArticlesPresenter implements ArticlesContract.Presenter {
     }
 
     @Override
-    public void setSource(int source) {
+    public void setSource(ArticlesDataSource.Article_Type source) {
         mArticlesRepository.setSource(source);
         mLastRequestedPage = 1;
     }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.soshified.soshified.R;
 import com.soshified.soshified.data.Comment;
 import com.soshified.soshified.util.DateUtils;
+import com.soshified.soshified.util.TextUtils;
 
 import java.util.ArrayList;
 
@@ -37,10 +38,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @Override
     public void onBindViewHolder(CommentsViewHolder holder, int position) {
         Comment comment = mComments.get(position);
-        holder.mCommentAuthor.setText(Html.fromHtml(comment.getName()));
+        holder.mCommentAuthor.setText(TextUtils.fromHtml(comment.getName()));
         holder.mCommentDate.setText(DateUtils.parseWordPressFormat(DateUtils
                 .getUnixTimeStamp(comment.getDate())));
-        holder.mCommentContent.setText(Html.fromHtml(comment.getContent()));
+        holder.mCommentContent.setText(TextUtils.fromHtml(comment.getContent()));
     }
 
     @Override

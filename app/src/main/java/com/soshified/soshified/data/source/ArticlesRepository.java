@@ -23,7 +23,6 @@ public class ArticlesRepository implements ArticlesDataSource {
     private ArticlesDataSource mRemoteDataSource;
     private ArticlesDataSource mLocalDataSource;
 
-
     private static Article_Type mCurrentType;
 
     private static List<SparseArray<Article>> mCachedArticles = new LinkedList<>();
@@ -45,6 +44,7 @@ public class ArticlesRepository implements ArticlesDataSource {
                                                  @NonNull ArticlesDataSource localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new ArticlesRepository(remoteDataSource, localDataSource);
+
         return INSTANCE;
     }
 
