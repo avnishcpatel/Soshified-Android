@@ -8,13 +8,14 @@ import android.text.Html;
 /**
  * Utility methods for text modification and formatting
  */
-public class TextUtils {
-
+public class TextUtils
+{
     public TextUtils() {}
 
     public static String fromHtml(String originalString)
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
             return Html.fromHtml(originalString, 0).toString().trim();
         }
         else return Html.fromHtml(originalString).toString().trim();

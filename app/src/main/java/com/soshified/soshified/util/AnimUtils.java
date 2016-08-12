@@ -20,8 +20,8 @@ import io.codetail.animation.SupportAnimator;
 /**
  * Utility methods for working with animations.
  */
-public class AnimUtils {
-
+public class AnimUtils
+{
     private AnimUtils() { }
 
     /**
@@ -31,16 +31,18 @@ public class AnimUtils {
      * @param duration Duration of animation
      * @param visibility Whether to be Invisible or Visible
      */
-    public static void startAlphaAnimation (View v, long duration, int visibility) {
-        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
-                ? new AlphaAnimation(0f, 1f) : new AlphaAnimation(1f, 0f);
+    public static void startAlphaAnimation (View v, long duration, int visibility)
+    {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE) ?
+                new AlphaAnimation(0f, 1f) : new AlphaAnimation(1f, 0f);
 
         alphaAnimation.setDuration(duration);
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
     }
 
-    public static void doSimpleYAnimation(View view, float offset, Interpolator interpolator) {
+    public static void doSimpleYAnimation(View view, float offset, Interpolator interpolator)
+    {
         view.setTranslationY(offset);
         view.setAlpha(0.8f);
         view.animate()
@@ -52,18 +54,23 @@ public class AnimUtils {
 
     }
 
-    public static void circularReveal(View view, boolean reverse) {
+    public static void circularReveal(View view, boolean reverse)
+    {
         int x = view.getRight();
         int y = view.getBottom();
 
         float radius = (float) Math.hypot(x, y);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+        {
             Animator animator;
-            if (!reverse) {
+            if (!reverse)
+            {
                 animator = ViewAnimationUtils.createCircularReveal(view, x, y, 9, radius);
                 view.setVisibility(View.VISIBLE);
-            } else {
+            }
+            else
+            {
                 animator = ViewAnimationUtils.createCircularReveal(view, x, y, radius, 0);
                 animator.addListener(new AnimatorListenerAdapter() {
                     @Override
@@ -75,9 +82,12 @@ public class AnimUtils {
             }
             animator.setDuration(400);
             animator.start();
-        } else {
+        }
+        else
+        {
             SupportAnimator animator;
-            if(!reverse) {
+            if(!reverse)
+            {
                 animator = io.codetail.animation.ViewAnimationUtils
                         .createCircularReveal(view, x, y, 0, radius);
                 view.setVisibility(View.VISIBLE);
@@ -105,24 +115,32 @@ public class AnimUtils {
      * @return Blurred Bitmap
      */
     @SuppressLint("NewApi")
-    public static BitmapDrawable blur(Context context, Bitmap bitmap, boolean supportRS) {
+    public static BitmapDrawable blur(Context context, Bitmap bitmap, boolean supportRS)
+    {
         int width = Math.round(bitmap.getWidth() * 0.1f);
         int height = Math.round(bitmap.getHeight() * 0.1f);
 
         Bitmap inputBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
         Bitmap finalBitmap = Bitmap.createBitmap(inputBitmap);
 
-        if (supportRS) {
+        if (supportRS)
+        {
             RenderScript renderScript = RenderScript.create(context);
+
             ScriptIntrinsicBlur intrinsicBlur = ScriptIntrinsicBlur.create(renderScript,
                     Element.U8_4(renderScript));
+
             Allocation tmpIn = Allocation.createFromBitmap(renderScript, inputBitmap);
             Allocation tmpOut = Allocation.createFromBitmap(renderScript, finalBitmap);
+
             intrinsicBlur.setRadius(15.5f);
             intrinsicBlur.setInput(tmpIn);
             intrinsicBlur.forEach(tmpOut);
+
             tmpOut.copyTo(finalBitmap);
-        } else {
+        }
+        else
+        {
             android.renderscript.RenderScript renderScript =
                     android.renderscript.RenderScript.create(context);
 
@@ -134,9 +152,11 @@ public class AnimUtils {
                     .createFromBitmap(renderScript, inputBitmap);
             android.renderscript.Allocation tmpOut = android.renderscript.Allocation
                     .createFromBitmap(renderScript, finalBitmap);
+
             intrinsicBlur.setRadius(15.5f);
             intrinsicBlur.setInput(tmpIn);
             intrinsicBlur.forEach(tmpOut);
+
             tmpOut.copyTo(finalBitmap);
         }
 

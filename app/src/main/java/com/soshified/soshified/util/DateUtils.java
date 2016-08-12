@@ -8,23 +8,24 @@ import java.util.Locale;
 /**
  * Utility methods for working with Dates
  */
-public class DateUtils {
-
+public class DateUtils
+{
     public DateUtils() {}
 
-    public static String parseWordPressFormat(long timestamp) {
-        Date date = new Date(timestamp);
-        SimpleDateFormat toFormat = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
-        return toFormat.format(date);
-
+    public static String parseWordPressFormat(long timestamp)
+    {
+        return (new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH)).format(new Date(timestamp));
     }
 
-    public static long getUnixTimeStamp(String date) {
+    public static long getUnixTimeStamp(String date)
+    {
         SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        try {
-            Date parsedDate = fromFormat.parse(date);
-            return parsedDate.getTime();
-        } catch (ParseException e) {
+        try
+        {
+            return fromFormat.parse(date).getTime();
+        }
+        catch (ParseException e)
+        {
             e.printStackTrace();
             return 0;
         }

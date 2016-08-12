@@ -5,11 +5,13 @@ import com.soshified.soshified.data.source.local.RealmComment;
 /**
  * Comment POJO for article comments
  */
-public class Comment {
+public class Comment
+{
     private int id, parent;
     private String name, content, date;
 
-    public Comment(RealmComment comment) {
+    public Comment(RealmComment comment)
+    {
         id = comment.getId();
         parent = comment.getParent();
         name = comment.getName();

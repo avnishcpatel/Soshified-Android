@@ -8,14 +8,15 @@ import java.util.ArrayList;
 /**
  * Object representation of a single article (Wordpress Post)
  */
-public class Article {
-
+public class Article
+{
     private String title, postContent, thumbnail, authorName, comment_status;
     private long postDate;
     private int id;
     private ArrayList<Comment> comments;
 
-    public Article(RealmArticle article) {
+    public Article(RealmArticle article)
+    {
         id = article.getId();
         title = article.getTitle();
         postDate = article.getDate();
